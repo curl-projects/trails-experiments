@@ -1,0 +1,17 @@
+.feedContainer {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .feedLogContainer {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+  }
+  
+  .feedContentContainer {
+    flex: 2;
+    overflow-y: auto;
+  padding: 20px;
+}

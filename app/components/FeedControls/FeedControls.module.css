@@ -1,0 +1,50 @@
+.feed-controls {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+  
+  .feed-controls h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+    color: #333;
+  }
+  
+  .feed-controls label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .feed-controls input[type="text"],
+  .feed-controls input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .feed-controls button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1em;
+  }
+  
+  .feed-controls button:hover {
+    background-color: #0056b3;
+  }

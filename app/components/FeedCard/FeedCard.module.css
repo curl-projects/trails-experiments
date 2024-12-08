@@ -1,0 +1,135 @@
+.feedCard {
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 16px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease-in-out;
+    cursor: pointer;
+  }
+  
+  .feedCard:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e1e4e8;
+  }
+  
+  .title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #24292e;
+    margin: 0 0 8px 0;
+  }
+  
+  .labels {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .label {
+    background-color: #e1e4e8;
+    color: #24292e;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+  }
+  
+  .section {
+    margin-bottom: 16px;
+  }
+  
+  .sectionTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #586069;
+    margin: 0 0 8px 0;
+  }
+  
+  .scoreList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  
+  .scoreItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background-color: #f6f8fa;
+    border-radius: 4px;
+  }
+  
+  .scoreLabel {
+    color: #586069;
+  }
+  
+  .scoreValue {
+    font-weight: 500;
+    color: #24292e;
+  }
+  
+  .pre {
+    background-color: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    padding: 12px;
+    margin: 0;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    overflow-x: auto;
+    color: #24292e;
+  }
+  
+  .expandedContent {
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    max-height: 2000px; /* Adjust based on your content */
+  }
+  
+  .collapsedContent {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+  }
+  
+  .summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .summaryScore {
+    font-weight: 600;
+    color: #24292e;
+    background-color: #f6f8fa;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  
+  .expandIcon {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+  }
+  
+  .expandIcon.expanded {
+    transform: rotate(180deg);
+  }
+  
+  .preview {
+    color: #586069;
+    font-size: 0.875rem;
+    margin-top: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Event, NodeEvent, ErrorEvent, ConnectionEvent, TriggerEvent, Node } from '~/types/FeedTypes';
+import { Event, NodeEvent, ErrorEvent, ConnectionEvent, TriggerEvent } from '~/types/FeedTypes';
+import { Node } from '~/types/GraphTypes';
+
 import styles from './FeedLog.module.css';
 import { useFeedContext } from '~/context/FeedContext';
 
@@ -53,7 +55,7 @@ const AddEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExp
     {isExpanded && (
       <div className={styles.expandedDetails}>
         <p>Ranking Score: {event.ranked_output.ranking_score}</p>
-        <p>Metadata: {JSON.stringify(event.ranked_output.metadata)}</p>
+        <p>Metadata: {JSON.stringify(event.ranked_output.output.metadata)}</p>
       </div>
     )}
   </div>
@@ -66,7 +68,7 @@ const UpdateEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, is
     {isExpanded && (
       <div className={styles.expandedDetails}>
         <p>Ranking Score: {event.ranked_output.ranking_score}</p>
-        <p>Metadata: {JSON.stringify(event.ranked_output.metadata)}</p>
+        <p>Metadata: {JSON.stringify(event.ranked_output.output.metadata)}</p>
       </div>
     )}
   </div>

@@ -38,6 +38,7 @@ export interface Output {
     avg_path_length?: number;
     [key: string]: any;
   };
+  paths: Record<string, Path[]>;
 }
 
 export interface RankingDistribution {

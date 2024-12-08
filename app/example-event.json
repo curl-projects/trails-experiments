@@ -1,0 +1,133 @@
+{
+    "event_type": "add",
+    "ranked_output": {
+      "output": {
+        "node": {
+          "id": "4:f47c7704-f779-481c-aebf-a12692433e5d:91",
+          "labels": [
+            "Author"
+          ],
+          "properties": {
+            "name": "Author Three",
+            "id": "dd9835b6-454f-4bd1-aa31-dda249f197ea"
+          }
+        },
+        "parameterized_compositions": [
+          {
+            "composition": {
+              "protocols": [
+                {
+                  "strategy": {
+                    "strategy_name": "Authorial Identity",
+                    "pathmap": {
+                      "('Post', 'Author')": "{'query_method': <bound method AuthorialIdentity._post_to_author of Strategy(Authorial Identity)>, 'nl_template': 'find the author of the post', 'transition_success': 0.95}",
+                      "('Author', 'Post')": "{'query_method': <bound method AuthorialIdentity._author_to_post of Strategy(Authorial Identity)>, 'nl_template': 'find posts written by this author', 'transition_success': 0.8}"
+                    },
+                    "disallowed_successors": {
+                      "('Post', 'Author')": [
+                        [
+                          "Authorial Identity",
+                          "Post",
+                          "Author"
+                        ]
+                      ],
+                      "('Post', 'Post')": []
+                    }
+                  },
+                  "input_type": "Post",
+                  "output_type": "Author"
+                }
+              ],
+              "nl_description": "Find the author of the post."
+            },
+            "params": [
+              {
+                "limit": 211
+              }
+            ],
+            "probability": 1.0
+          }
+        ],
+        "paths": {
+          "Composition(Protocol(Strategy(Authorial Identity), Post, Author)": [
+            {
+              "nodes": [
+                {
+                  "id": "4:f47c7704-f779-481c-aebf-a12692433e5d:28",
+                  "labels": [
+                    "Post"
+                  ],
+                  "properties": {
+                    "popularity": 0.6,
+                    "id": "b509d1a2-e9f3-4605-b027-44eb62f10e6d",
+                    "title": "Advanced Neo4j Techniques",
+                    "content": "Content 4"
+                  }
+                },
+                {
+                  "id": "4:f47c7704-f779-481c-aebf-a12692433e5d:91",
+                  "labels": [
+                    "Author"
+                  ],
+                  "properties": {
+                    "name": "Author Three",
+                    "id": "dd9835b6-454f-4bd1-aa31-dda249f197ea"
+                  }
+                }
+              ],
+              "relationships": [
+                {
+                  "id": "5:f47c7704-f779-481c-aebf-a12692433e5d:1152923703630102556",
+                  "type": "AUTHORED_BY",
+                  "start_node_id": "4:f47c7704-f779-481c-aebf-a12692433e5d:28",
+                  "end_node_id": "4:f47c7704-f779-481c-aebf-a12692433e5d:91",
+                  "properties": {
+                    "id": "df69f501-a042-4ab2-ade4-67aa186947df"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "path_count": 1,
+          "avg_path_length": 1.0,
+          "composition_count": 1
+        }
+      },
+      "ranking_score": 0.65,
+      "ranking_distribution": {
+        "input_diversity": 0.1,
+        "protocol_diversity": 0.1,
+        "content_diversity": 0.1,
+        "input_preference": 0.1,
+        "strategy_preference": 0.1,
+        "content_quality": 0.2,
+        "timeliness": 0.1,
+        "content_distance": 0.2
+      },
+      "ranking_scores": {
+        "input_diversity": 1.0,
+        "protocol_diversity": 1.0,
+        "content_diversity": 1.0,
+        "input_preference": 0,
+        "strategy_preference": 0.0,
+        "content_quality": 0.5,
+        "timeliness": 0.5,
+        "content_distance": 1.0
+      },
+      "protocol_distribution": {
+        "('Authorial Identity', 'Post', 'Author')": 0.12499999999999999,
+        "('Authorial Identity', 'Author', 'Post')": 0.10937499999999997,
+        "('Referential Similarity', 'Concept', 'Post')": 0.09374999999999997,
+        "('Referential Similarity', 'Post', 'Concept')": 0.09374999999999997,
+        "('Referential Similarity', 'Entity', 'Post')": 0.07812499999999999,
+        "('Referential Similarity', 'Post', 'Entity')": 0.07812499999999999,
+        "('Conceptual Similarity', 'Concept', 'Concept')": 0.14062499999999997,
+        "('Conceptual Similarity', 'Concept', 'Post')": 0.14062499999999997,
+        "('Conceptual Similarity', 'Post', 'Concept')": 0.14062499999999997
+      }
+    },
+    "message": null
+  }
+  

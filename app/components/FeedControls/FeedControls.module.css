@@ -12,26 +12,83 @@
   }
   
   .feed-controls h3 {
-    margin-top: 0;
+    margin: 0;
     font-size: 1.2em;
     color: #333;
+    margin-bottom: 16px;
   }
   
-  .feed-controls label {
+  .inputGroup {
+    margin-bottom: 16px;
+  }
+  
+  .inputGroup label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
     color: #555;
   }
   
-  .feed-controls input[type="text"],
-  .feed-controls input[type="number"] {
+  .inputGroup input[type="text"],
+  .inputGroup input[type="number"] {
     width: 100%;
     padding: 8px;
-    margin-bottom: 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+  }
+  
+  .checkboxGroup {
+    margin-bottom: 16px;
+  }
+  
+  .checkboxGroup label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #555;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .strategiesGroup {
+    margin-bottom: 16px;
+    background-color: #f9f9f9;
+    padding: 12px;
+    border-radius: 6px;
+  }
+  
+  .strategiesGroup > label:first-child {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .strategyOption {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    padding: 8px;
+    cursor: pointer;
+    color: #333;
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .strategyOption:hover {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    transform: translateX(4px);
+  }
+  
+  .strategyOption input[type="checkbox"] {
+    margin: 0;
+    width: 16px;
+    height: 16px;
   }
   
   .feed-controls button {
@@ -43,8 +100,84 @@
     cursor: pointer;
     width: 100%;
     font-size: 1em;
+    margin-top: 8px;
   }
   
   .feed-controls button:hover {
     background-color: #0056b3;
+  }
+  
+  /* Style for disabled inputs */
+  .inputGroup input:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+  }
+  
+  /* Style for validation errors */
+  .inputGroup input:invalid {
+    border-color: #dc3545;
+  }
+  
+  .advancedToggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #495057;
+    font-weight: bold;
+    transition: all 0.2s ease;
+  }
+  
+  .advancedToggle:hover {
+    background-color: #e9ecef;
+  }
+  
+  .advancedOptions {
+    padding: 8px;
+    margin-bottom: 16px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+  }
+  
+  .advancedOptions .inputGroup:last-child,
+  .advancedOptions .checkboxGroup:last-child {
+    margin-bottom: 0;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .header h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #333;
+  }
+  
+  .minimizeButton {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20% !important;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .minimizeButton:hover {
+    background-color: #e9ecef;
+    color: #333;
   }

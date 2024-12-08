@@ -100,6 +100,13 @@ export interface TriggerEvent {
   timestamp: string;
 }
 
-export type Event = NodeEvent | ErrorEvent | ConnectionEvent | TriggerEvent;
+export interface ValidationEvent {
+  event_type: 'validation';
+  status: 'success' | 'failure';
+  message: string;
+  details: Record<string, any>;
+}
+
+export type Event = NodeEvent | ErrorEvent | ConnectionEvent | TriggerEvent | ValidationEvent;
 
 

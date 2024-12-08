@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Event, NodeEvent, ErrorEvent, ConnectionEvent, TriggerEvent } from '~/types/FeedTypes';
+import { Event, NodeEvent, ErrorEvent, ConnectionEvent, TriggerEvent, Node } from '~/types/FeedTypes';
 import styles from './FeedLog.module.css';
+import { useFeedContext } from '~/context/FeedContext';
 
 interface ExpandableEventProps {
   event: Event;
@@ -8,6 +9,7 @@ interface ExpandableEventProps {
 
 const ExpandableEvent: React.FC<ExpandableEventProps> = ({ event }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { getNodeTitle } = useFeedContext();
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -15,18 +17,38 @@ const ExpandableEvent: React.FC<ExpandableEventProps> = ({ event }) => {
 
   return (
     <div className={styles.eventBox} onClick={toggleExpand}>
-      {event.event_type === 'add' && <AddEvent event={event as NodeEvent} isExpanded={isExpanded} />}
-      {event.event_type === 'update' && <UpdateEvent event={event as NodeEvent} isExpanded={isExpanded} />}
-      {event.event_type === 'error' && <ErrorEventComponent event={event as ErrorEvent} isExpanded={isExpanded} />}
-      {event.event_type === 'connection' && <ConnectionEventComponent event={event as ConnectionEvent} isExpanded={isExpanded} />}
-      {event.event_type === 'trigger' && <TriggerEventComponent event={event as TriggerEvent} isExpanded={isExpanded} />}
+      {event.event_type === 'add' && <AddEvent 
+                                        event={event as NodeEvent}
+                                        isExpanded={isExpanded} 
+                                        getNodeTitle={getNodeTitle}
+                                        />}
+      {event.event_type === 'update' && <UpdateEvent 
+                                          event={event as NodeEvent} 
+                                          isExpanded={isExpanded}
+                                          getNodeTitle={getNodeTitle}
+                                          />}
+      {event.event_type === 'error' && <ErrorEventComponent 
+                                          event={event as ErrorEvent} 
+                                          isExpanded={isExpanded}
+                                          getNodeTitle={getNodeTitle}
+                                          />}
+      {event.event_type === 'connection' && <ConnectionEventComponent 
+                                          event={event as ConnectionEvent} 
+                                          isExpanded={isExpanded}
+                                          getNodeTitle={getNodeTitle}
+                                          />}
+      {event.event_type === 'trigger' && <TriggerEventComponent 
+                                          event={event as TriggerEvent} 
+                                          isExpanded={isExpanded}
+                                          getNodeTitle={getNodeTitle}
+                                          />}
     </div>
   );
 };
 
-const AddEvent = ({ event, isExpanded }: { event: NodeEvent, isExpanded: boolean }) => (
+const AddEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
   <div className={styles.addEvent}>
-    <span className={styles.nodeId}>{event.ranked_output?.output.node.id}</span>
+    <span className={styles.nodeId}>{getNodeTitle(event.ranked_output?.output.node)}</span>
     <span className={styles.eventDetails}>New node added to feed</span>
     {isExpanded && (
       <div className={styles.expandedDetails}>
@@ -37,7 +59,7 @@ const AddEvent = ({ event, isExpanded }: { event: NodeEvent, isExpanded: boolean
   </div>
 );
 
-const UpdateEvent = ({ event, isExpanded }: { event: NodeEvent, isExpanded: boolean }) => (
+const UpdateEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
   <div className={styles.updateEvent}>
     <span className={styles.nodeId}>{event.ranked_output?.output.node.id}</span>
     <span className={styles.eventDetails}>Node position updated</span>
@@ -50,7 +72,7 @@ const UpdateEvent = ({ event, isExpanded }: { event: NodeEvent, isExpanded: bool
   </div>
 );
 
-const ErrorEventComponent = ({ event, isExpanded }: { event: ErrorEvent, isExpanded: boolean }) => (
+const ErrorEventComponent = ({ event, isExpanded, getNodeTitle }: { event: ErrorEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
   <div className={styles.errorEvent}>
     <span className={styles.errorIcon}>⚠️</span>
     <span className={styles.eventDetails}>{event.message}</span>
@@ -62,7 +84,7 @@ const ErrorEventComponent = ({ event, isExpanded }: { event: ErrorEvent, isExpan
   </div>
 );
 
-const ConnectionEventComponent = ({ event, isExpanded }: { event: ConnectionEvent, isExpanded: boolean }) => (
+const ConnectionEventComponent = ({ event, isExpanded, getNodeTitle }: { event: ConnectionEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
   <div className={styles.connectionEvent}>
     <span className={styles.eventDetails}>
       {event.status === 'connected' ? 'Connected to server' : 'Disconnected from server'} at {event.timestamp}
@@ -75,7 +97,7 @@ const ConnectionEventComponent = ({ event, isExpanded }: { event: ConnectionEven
   </div>
 );
 
-const TriggerEventComponent = ({ event, isExpanded }: { event: TriggerEvent, isExpanded: boolean }) => (
+const TriggerEventComponent = ({ event, isExpanded, getNodeTitle }: { event: TriggerEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
   <div className={styles.triggerEvent}>
     <span className={styles.eventDetails}>
       Triggered action: {event.action} at {event.timestamp}

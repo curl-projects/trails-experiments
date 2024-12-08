@@ -1,0 +1,30 @@
+.composition {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    background-color: #f6f8fa;
+  }
+  
+  .description {
+    font-weight: bold;
+    color: #24292e;
+  }
+  
+  .strategyChain {
+    color: #586069;
+  }
+  
+  .parameters {
+    color: #24292e;
+  }
+  
+  .paths {
+    color: #24292e;
+  }
+  
+  .path {
+    margin-top: 4px;
+  }

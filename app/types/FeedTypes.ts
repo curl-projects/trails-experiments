@@ -1,81 +1,77 @@
 // Basic Neo4j Types
-export interface Node {
-  id: string;
-  labels: string[];
-  properties: Record<string, any>;
-}
-
-export interface Relationship {
-  id: string;
-  type: string;
-  start_node_id: string;
-  end_node_id: string;
-  properties: Record<string, any>;
-}
+import { Node, Relationship } from "./GraphTypes";
 
 export interface Path {
   nodes: Node[];
   relationships: Relationship[];
 }
 
-// Strategy and Composition Types
 export interface Strategy {
-  name: string;
+  strategy_name: string;
+  path_map: Record<string, string>;
+  disallowed_successors: Record<string, Array<Array<string>>>;
+}
+
+// Strategy and Composition Types
+export interface Protocol {
+  strategy: Strategy;
   input_type: string;
   output_type: string;
 }
 
 export interface Composition {
-  strategies: Strategy[];
-  path_name_map: Record<string, (node: Node) => string>;
+  protocols: Protocol[];
+  nl_description: string;
 }
 
-// Output Types
+export interface ParameterizedComposition {
+  composition: Composition;
+  params: Array<{ limit?: number; [key: string]: any; }>;
+  probability: number | null;
+}
+
 export interface Output {
   node: Node;
-  compositions: Record<string, Path[]>;
+  parameterized_compositions: ParameterizedComposition[];
   metadata: {
     path_count?: number;
     avg_path_length?: number;
-    composition_count?: number;
     [key: string]: any;
   };
-  composition_params: Record<string, {
-    params: Array<{ limit?: number; [key: string]: any; }>;
-    probability: number | null;
-  }>;
+}
+
+export interface RankingDistribution {
+  input_diversity: number;
+  protocol_diversity: number;
+  content_diversity: number;
+  input_preference: number;
+  strategy_preference: number;
+  content_quality: number;
+  timeliness: number;
+  content_distance: number;
+}
+
+export interface RankingScores {
+  input_diversity: number;
+  protocol_diversity: number;
+  content_diversity: number;
+  input_preference: number;
+  strategy_preference: number;
+  content_quality: number;
+  timeliness: number;
+  content_distance: number;
+}
+
+export interface ProtocolDistribution {
+  [key: string]: number;
 }
 
 export interface RankedOutput {
   output: Output;
-  compositions: Record<string, Path[]>;
-  node: Node;
-  metadata: Record<string, any>;
-  composition_params: Record<string, any>;
   ranking_score: number;
-  ranking_distribution: {
-    input_diversity: number;
-    protocol_diversity: number;
-    content_diversity: number;
-    input_preference: number;
-    strategy_preference: number;
-    content_quality: number;
-    timeliness: number;
-    content_distance: number;
-    [key: string]: number;
-  };
-  sub_scores: {
-    input_diversity: number;
-    protocol_diversity: number;
-    content_diversity: number;
-    input_preference: number;
-    strategy_preference: number;
-    content_quality: number;
-    timeliness: number;
-    content_distance: number;
-    [key: string]: number;
-  };
-  strategy_distribution: Record<string, number>;
+  ranking_distribution: RankingDistribution;
+  ranking_scores: RankingScores;
+  protocol_distribution: ProtocolDistribution;
 }
 
 // Event Types
@@ -103,5 +99,6 @@ export interface TriggerEvent {
   timestamp: string;
 }
 
-
 export type Event = NodeEvent | ErrorEvent | ConnectionEvent | TriggerEvent;
+
+

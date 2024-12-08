@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Event, NodeEvent, ErrorEvent, ConnectionEvent, TriggerEvent } from '~/types/FeedTypes';
 import { Node } from '~/types/GraphTypes';
+import { FaPlusCircle, FaEdit, FaExclamationCircle, FaPlug, FaBolt, FaUnlink } from 'react-icons/fa';
 
 import styles from './FeedLog.module.css';
 import { useFeedContext } from '~/context/FeedContext';
@@ -50,6 +51,7 @@ const ExpandableEvent: React.FC<ExpandableEventProps> = ({ event }) => {
 
 const AddEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
   <div className={styles.addEvent}>
+    <FaPlusCircle className={styles.eventIcon} style={{ color: '#28a745' }} />
     <span className={styles.nodeId}>{getNodeTitle(event.ranked_output?.output.node)}</span>
     <span className={styles.eventDetails}>New node added to feed</span>
     {isExpanded && (
@@ -63,6 +65,7 @@ const AddEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExp
 
 const UpdateEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
   <div className={styles.updateEvent}>
+    <FaEdit className={styles.eventIcon} />
     <span className={styles.nodeId}>{event.ranked_output?.output.node.id}</span>
     <span className={styles.eventDetails}>Node position updated</span>
     {isExpanded && (
@@ -76,6 +79,7 @@ const UpdateEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, is
 
 const ErrorEventComponent = ({ event, isExpanded, getNodeTitle }: { event: ErrorEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
   <div className={styles.errorEvent}>
+    <FaExclamationCircle className={styles.eventIcon} />
     <span className={styles.errorIcon}>⚠️</span>
     <span className={styles.eventDetails}>{event.message}</span>
     {isExpanded && event.traceback && (
@@ -88,6 +92,11 @@ const ErrorEventComponent = ({ event, isExpanded, getNodeTitle }: { event: Error
 
 const ConnectionEventComponent = ({ event, isExpanded, getNodeTitle }: { event: ConnectionEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
   <div className={styles.connectionEvent}>
+    {event.status === 'connected' ? (
+      <FaPlug className={styles.eventIcon} />
+    ) : (
+      <FaUnlink className={styles.eventIcon} />
+    )}
     <span className={styles.eventDetails}>
       {event.status === 'connected' ? 'Connected to server' : 'Disconnected from server'} at {event.timestamp}
     </span>
@@ -101,6 +110,7 @@ const ConnectionEventComponent = ({ event, isExpanded, getNodeTitle }: { event: 
 
 const TriggerEventComponent = ({ event, isExpanded, getNodeTitle }: { event: TriggerEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
   <div className={styles.triggerEvent}>
+    <FaBolt className={styles.eventIcon} style={{ color: '#ffdd44' }} />
     <span className={styles.eventDetails}>
       Triggered action: {event.action} at {event.timestamp}
     </span>

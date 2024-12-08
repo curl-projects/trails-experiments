@@ -11,9 +11,9 @@ interface FeedCardProps {
 
 export function FeedCard({ rankedOutput }: FeedCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { getNodeTitle } = useFeedContext();
-
-  // Ensure compositions is an array of CompositionData
+  const { getNodeTitle, getNodeTypeColors, formatPathGroupTitle } = useFeedContext();
+  const nodeType = rankedOutput.output.node.labels[0];
+  const colors = getNodeTypeColors(nodeType);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -23,7 +23,18 @@ export function FeedCard({ rankedOutput }: FeedCardProps) {
     <div className={styles.feedCard} onClick={toggleExpand}>
       <div className={styles.header}>
         <div className={styles.summary}>
-          <h3 className={styles.title}>{getNodeTitle(rankedOutput.output.node)}</h3>
+          <div className={styles.titleContainer}>
+            <h3 className={styles.title}>{getNodeTitle(rankedOutput.output.node)}</h3>
+            <span 
+              className={styles.nodeType}
+              style={{ 
+                backgroundColor: colors.background,
+                color: colors.text 
+              }}
+            >
+              {nodeType}
+            </span>
+          </div>
           <div className={styles.summaryScore}>
             Score: {rankedOutput.ranking_score.toFixed(3)}
             <span className={`${styles.expandIcon} ${isExpanded ? styles.expanded : ''}`}>
@@ -31,19 +42,23 @@ export function FeedCard({ rankedOutput }: FeedCardProps) {
             </span>
           </div>
         </div>
-        <div className={styles.labels}>
-          {rankedOutput.output.node.labels.map((label) => (
-            <span key={label} className={styles.label}>
-              {label}
-            </span>
-          ))}
-        </div>
-        {!isExpanded && (
-          <div className={styles.preview}>
-            {Object.keys(rankedOutput.output.node.properties).length} properties, 
-            {Object.keys(rankedOutput.ranking_scores).length} sub-scores
-          </div>
-        )}
+      </div>
+
+      <div className={styles.pathsContainer}>
+        {Object.entries(rankedOutput.output.paths).map(([key, paths]) => {
+          const { protocolString, description } = formatPathGroupTitle(key, rankedOutput.output.parameterized_compositions);
+          return (
+            <div key={key} className={styles.pathGroup}>
+              <div className={styles.pathGroupHeader}>
+                <div className={styles.pathGroupTitle}>{protocolString}</div>
+                <div className={styles.pathGroupDescription}>{description}</div>
+              </div>
+              {paths.map((path, index) => (
+                <Path key={index} path={path} />
+              ))}
+            </div>
+          );
+        })}
       </div>
 
       <div className={isExpanded ? styles.expandedContent : styles.collapsedContent}>

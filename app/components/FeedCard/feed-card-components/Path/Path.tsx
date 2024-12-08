@@ -1,14 +1,15 @@
 import React from 'react';
 import { Path as PathType } from '~/types/FeedTypes';
 import styles from './Path.module.css';
-import { getNodeDisplayName } from '~/helpers/nodeNameMap';
-import { getNodeTypeColors } from '~/helpers/nodeColorMap';
+import { useFeedContext } from '~/context/FeedContext';
 
 interface PathProps {
   path: PathType;
 }
 
 export function Path({ path }: PathProps) {
+  const { getNodeTitle, getNodeTypeColors } = useFeedContext();
+
   return (
     <div className={styles.path}>
       {path.nodes.map((node, index) => {
@@ -21,7 +22,7 @@ export function Path({ path }: PathProps) {
             <div className={styles.node}>
               <span className={styles.nodeContent}>
                 <span className={styles.nodeValue}>
-                  {getNodeDisplayName(node)}
+                  {getNodeTitle(node)}
                 </span>
                 <span 
                   className={styles.nodeType}

@@ -100,3 +100,15 @@
   overflow: hidden;
   word-wrap: break-word;
 }
+
+.eventIcon {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+  color: inherit; /* Inherit color from the event type */
+}
+
+.addEvent, .updateEvent, .errorEvent, .unknownEvent, .connectionEvent, .triggerEvent {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

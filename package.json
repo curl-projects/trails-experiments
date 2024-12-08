@@ -20,7 +20,8 @@
     "neo4j-driver": "^5.27.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-draggable": "^4.4.6"
+    "react-draggable": "^4.4.6",
+    "react-icons": "^5.4.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.15.0",

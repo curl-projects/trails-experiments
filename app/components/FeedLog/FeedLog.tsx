@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Event, NodeEvent, ErrorEvent, ConnectionEvent, TriggerEvent } from '~/types/FeedTypes';
+import { Event, NodeEvent, ErrorEvent, ConnectionEvent, TriggerEvent, ValidationEvent } from '~/types/FeedTypes';
 import { Node } from '~/types/GraphTypes';
 import { FaPlus, FaPencilAlt, FaExclamationCircle, FaPlug, FaBolt, FaUnlink, FaCheckCircle } from 'react-icons/fa';
 
@@ -8,13 +8,6 @@ import { useFeedContext } from '~/context/FeedContext';
 
 interface ExpandableEventProps {
   event: Event;
-}
-
-interface ValidationEvent extends Event {
-  event_type: 'validation';
-  status: 'success';
-  message: string;
-  details?: Record<string, any>;
 }
 
 const ExpandableEvent: React.FC<ExpandableEventProps> = ({ event }) => {

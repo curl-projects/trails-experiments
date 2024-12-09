@@ -20,6 +20,7 @@ export interface Protocol {
   strategy: Strategy;
   input_type: string;
   output_type: string;
+  natural_language_description: string;
 }
 
 export interface Composition {
@@ -119,6 +120,12 @@ export interface ValidationEvent {
   details: Record<string, any>;
 }
 
-export type Event = NodeEvent | ErrorEvent | ConnectionEvent | TriggerEvent | ValidationEvent;
+export interface DataEvent {
+  id: string;
+  event_type: 'data';
+  data: any;
+}
+
+export type Event = NodeEvent | ErrorEvent | ConnectionEvent | TriggerEvent | ValidationEvent | DataEvent;
 
 

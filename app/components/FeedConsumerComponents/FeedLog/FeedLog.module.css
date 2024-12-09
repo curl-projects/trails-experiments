@@ -148,5 +148,20 @@
   background: #ebf8ff;
   padding: 0.1rem 0.4rem;
   border-radius: 4px;
-  margin-right: 0.5rem;
+}
+
+.feedLogContainer {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #1a1a1a;
+}
+
+.feedLogTitle {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
+  font-weight: 400;
+  font-family: monospace;
 }

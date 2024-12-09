@@ -1,17 +1,18 @@
 // app/routes/feed-consumer.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import { ConnectionEvent, Event, TriggerEvent, ErrorEvent } from '~/types/FeedTypes';
-import { FeedContainer } from '~/components/FeedConsumerComponents/FeedContainer/FeedContainer';
 import { FeedControls } from '~/components/FeedConsumerComponents/FeedControls/FeedControls';
 import { useEventContext } from '~/context/FeedEventContext';
 import { v4 as uuidv4 } from 'uuid';
 import { eventSchema } from '~/types/RuntimeFeedSchemas';
+import { FeedConsumerLayout } from '~/components/FeedConsumerComponents/FeedConsumerLayout';
 
 export default function FeedConsumer() {
   const { events, setEvents } = useEventContext();
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
+    setEvents([]);
     ws.current = new WebSocket('ws://127.0.0.1:6789');
 
     ws.current.onopen = () => {
@@ -104,7 +105,7 @@ export default function FeedConsumer() {
   return (
     <div>
       <FeedControls onTriggerSearch={handleTriggerSearch} />
-      <FeedContainer events={events} />
+      <FeedConsumerLayout events={events} />
     </div>
   );
 }

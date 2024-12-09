@@ -1,0 +1,22 @@
+.feedConsumerContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContent {
+  display: flex;
+  flex: 1;
+}
+
+.feedLog {
+  flex: 1; /* Left third */
+  padding: 10px;
+  overflow-y: auto;
+  border-right: 1px solid #ccc; /* Separator line on the right */
+  /* background-color: #f9f9f9; Optional background color */
+}
+
+.content {
+  flex: 2; /* Right two-thirds */
+  padding: 10px;
+} 

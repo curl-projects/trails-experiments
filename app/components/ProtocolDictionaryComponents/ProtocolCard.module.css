@@ -1,0 +1,78 @@
+.protocolCard {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.protocolCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.header {
+  margin-bottom: 0.5rem;
+}
+
+.types {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.type {
+  background: #f0f0f0;
+  padding: 0.25rem 0.75rem;
+border-radius: 4px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.nlDescriptionContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nlDescription {
+  font-size: 0.9rem;
+  color: #666;
+  font-family: monospace;
+  text-align: center;
+
+}
+
+.arrow {
+  color: #999;
+  font-weight: bold;
+}
+
+.content h3 {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.pathMap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pathRule {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.key {
+  color: #888;
+  font-weight: 500;
+}
+
+.value {
+  color: #444;
+} 

@@ -7,9 +7,10 @@ export function Header() {
     <header className={styles.header}>
       <nav>
         <ul>
-          <li><Link to="/">Feed Consumer</Link></li>
+          
           <li><Link to="/protocol-dictionary">Protocol Dictionary</Link></li>
           <li><Link to="/composition-explorer">Composition Explorer</Link></li>
+          <li><Link to="/feed-consumer">Feed Generator</Link></li>
         </ul>
       </nav>
     </header>

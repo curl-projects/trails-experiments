@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Event, NodeEvent, ErrorEvent, ConnectionEvent, TriggerEvent, ValidationEvent } from '~/types/FeedTypes';
+import React, { useState } from 'react';
+import { Event, NodeEvent, ErrorEvent, ConnectionEvent, TriggerEvent, ValidationEvent, DataEvent } from '~/types/FeedTypes';
 import { Node } from '~/types/GraphTypes';
-import { FaPlus, FaPencilAlt, FaExclamationCircle, FaPlug, FaBolt, FaUnlink, FaCheckCircle } from 'react-icons/fa';
+import { FaPlus, FaPencilAlt, FaExclamationCircle, FaPlug, FaBolt, FaUnlink, FaCheckCircle, FaDatabase } from 'react-icons/fa';
+import { useFeedContext } from '~/context/FeedContext';
 
 import styles from './FeedLog.module.css';
-import { useFeedContext } from '~/context/FeedContext';
+
+interface FeedLogProps {
+  events: Event[];
+}
 
 interface ExpandableEventProps {
   event: Event;
 }
 
-const ExpandableEvent: React.FC<ExpandableEventProps> = ({ event }) => {
+const ExpandableEvent: React.FC<ExpandableEventProps> = ({
+  event,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { getNodeTitle } = useFeedContext();
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -23,38 +28,43 @@ const ExpandableEvent: React.FC<ExpandableEventProps> = ({ event }) => {
       {event.event_type === 'add' && <AddEvent 
                                         event={event as NodeEvent}
                                         isExpanded={isExpanded} 
-                                        getNodeTitle={getNodeTitle}
                                         />}
       {event.event_type === 'update' && <UpdateEvent 
                                           event={event as NodeEvent} 
                                           isExpanded={isExpanded}
-                                          getNodeTitle={getNodeTitle}
                                           />}
       {event.event_type === 'error' && <ErrorEventComponent 
                                           event={event as ErrorEvent} 
                                           isExpanded={isExpanded}
-                                          getNodeTitle={getNodeTitle}
                                           />}
       {event.event_type === 'connection' && <ConnectionEventComponent 
                                           event={event as ConnectionEvent} 
                                           isExpanded={isExpanded}
-                                          getNodeTitle={getNodeTitle}
                                           />}
       {event.event_type === 'trigger' && <TriggerEventComponent 
                                           event={event as TriggerEvent} 
                                           isExpanded={isExpanded}
-                                          getNodeTitle={getNodeTitle}
                                           />}
       {event.event_type === 'validation' && <ValidationEventComponent 
                                           event={event as ValidationEvent} 
                                           isExpanded={isExpanded}
                                           />}
+      {event.event_type === 'data' && (
+        <DataEventComponent event={event as DataEvent} isExpanded={isExpanded} />
+      )}
     </div>
   );
 };
 
-const AddEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => {
-  const { getNodeTypeColors } = useFeedContext();
+const AddEvent = ({
+  event,
+  isExpanded,
+}: {
+  event: NodeEvent;
+  isExpanded: boolean;
+}) => {
+  const { getNodeTitle, getNodeTypeColors } = useFeedContext();
+
   const node = event.ranked_output?.output.node;
   const colors = getNodeTypeColors(node.labels[0]);
 
@@ -65,7 +75,8 @@ const AddEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExp
         <span className={styles.eventDetails}>
           <span className={styles.nodeValue} style={{ backgroundColor: colors.background, color: colors.text }}>
             {getNodeTitle(node)}
-          </span> added to feed
+          </span>{' '}
+          added to feed
         </span>
       </div>
       {isExpanded && (
@@ -78,8 +89,15 @@ const AddEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExp
   );
 };
 
-const UpdateEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => {
-  const { getNodeTypeColors } = useFeedContext();
+const UpdateEvent = ({
+  event,
+  isExpanded,
+}: {
+  event: NodeEvent;
+  isExpanded: boolean;
+}) => {
+  const { getNodeTitle, getNodeTypeColors } = useFeedContext();
+
   const node = event.ranked_output?.output.node;
   const colors = getNodeTypeColors(node.labels[0]);
 
@@ -90,7 +108,7 @@ const UpdateEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, is
         <span className={styles.eventDetails}>
           <span className={styles.nodeValue} style={{ backgroundColor: colors.background, color: colors.text }}>
             {getNodeTitle(node)}
-          </span> position updated
+          </span> node updated
         </span>
       </div>
       {isExpanded && (
@@ -103,7 +121,13 @@ const UpdateEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, is
   );
 };
 
-const ErrorEventComponent = ({ event, isExpanded, getNodeTitle }: { event: ErrorEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
+const ErrorEventComponent = ({
+  event,
+  isExpanded,
+}: {
+  event: ErrorEvent;
+  isExpanded: boolean;
+}) => (
   <div className={styles.errorEvent}>
     <div className={styles.eventContent}>
       <FaExclamationCircle className={styles.eventIcon} style={{ fontSize: "1.8rem" }} />
@@ -117,7 +141,13 @@ const ErrorEventComponent = ({ event, isExpanded, getNodeTitle }: { event: Error
   </div>
 );
 
-const ConnectionEventComponent = ({ event, isExpanded, getNodeTitle }: { event: ConnectionEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
+const ConnectionEventComponent = ({
+  event,
+  isExpanded,
+}: {
+  event: ConnectionEvent;
+  isExpanded: boolean;
+}) => (
   <div className={styles.connectionEvent}>
     <div className={styles.eventContent}>
       {event.status === 'connected' ? (
@@ -137,7 +167,13 @@ const ConnectionEventComponent = ({ event, isExpanded, getNodeTitle }: { event: 
   </div>
 );
 
-const TriggerEventComponent = ({ event, isExpanded, getNodeTitle }: { event: TriggerEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
+const TriggerEventComponent = ({
+  event,
+  isExpanded,
+}: {
+  event: TriggerEvent;
+  isExpanded: boolean;
+}) => (
   <div className={styles.triggerEvent}>
     <div className={styles.eventContent}>
       <FaBolt className={styles.eventIcon} style={{ color: '#ffdd44' }} />
@@ -154,7 +190,13 @@ const TriggerEventComponent = ({ event, isExpanded, getNodeTitle }: { event: Tri
   </div>
 );
 
-function ValidationEventComponent({ event, isExpanded }: { event: ValidationEvent, isExpanded: boolean }) {
+function ValidationEventComponent({
+  event,
+  isExpanded,
+}: {
+  event: ValidationEvent;
+  isExpanded: boolean;
+}) {
   return (
     <div className={styles.validationEvent}>
       <div className={styles.eventContent}>
@@ -170,10 +212,30 @@ function ValidationEventComponent({ event, isExpanded }: { event: ValidationEven
   );
 }
 
-export function FeedLog({ events }: { events: Event[] }) {
+const DataEventComponent = ({
+  event,
+  isExpanded,
+}: {
+  event: DataEvent;
+  isExpanded: boolean;
+}) => (
+  <div className={styles.dataEvent}>
+    <div className={styles.eventContent}>
+      <FaDatabase className={styles.eventIcon} />
+      <span className={styles.eventDetails}>Received data event</span>
+    </div>
+    {isExpanded && (
+      <div className={styles.expandedDetails}>
+        <pre>{JSON.stringify(event.data, null, 2)}</pre>
+      </div>
+    )}
+  </div>
+);
+
+export function FeedLog({ events }: FeedLogProps) {
   return (
-    <div className={styles.feedLog}>
-      <h3>Feed Event Log:</h3>
+    <div className={styles.feedLogContainer}>
+      <h3 className={styles.feedLogTitle}>Feed Event Log</h3>
       <div className={styles.eventList}>
         {events.map((event, index) => (
           <div key={index} className={styles.eventWrapper}>

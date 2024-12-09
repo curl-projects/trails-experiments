@@ -1,0 +1,22 @@
+.feedConsumerContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContent {
+  display: flex;
+  flex: 1;
+}
+
+.content {
+  flex: 2; /* Takes up approximately two-thirds */
+  padding: 10px;
+}
+
+.feedLog {
+  flex: 1; /* Takes up approximately one-third */
+  padding: 10px;
+  overflow-y: auto;
+  /* Optional: Add a border or background for clarity */
+  /* border-left: 1px solid #ccc; */
+} 

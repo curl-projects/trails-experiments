@@ -1,0 +1,19 @@
+.strategyGroup {
+  margin-bottom: 3rem;
+}
+
+.strategyName {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #eee;
+  font-weight: 400;
+  font-family: monospace;
+}
+
+.protocolGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+} 

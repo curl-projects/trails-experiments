@@ -21,6 +21,7 @@ export interface Protocol {
   input_type: string;
   output_type: string;
   natural_language_description: string;
+  protocol_code: string;
 }
 
 export interface Composition {

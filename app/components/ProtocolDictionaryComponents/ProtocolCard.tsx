@@ -31,13 +31,10 @@ export default function ProtocolCard({ protocol }: ProtocolCardProps) {
         </div>
         {
           isExpanded && (
-            <div className={styles.pathMap}>
-              {Object.entries(protocol.strategy.pathmap).map(([key, value]) => (
-                <div key={key} className={styles.pathRule}>
-                  <span className={styles.key}>{key}:</span>
-                  <span className={styles.value}>{value}</span>
-                </div>
-              ))}
+            <div className={styles.codeBlock}>
+              <pre className={styles.code}>
+                {protocol.protocol_code}
+              </pre>
             </div>
           )
         }

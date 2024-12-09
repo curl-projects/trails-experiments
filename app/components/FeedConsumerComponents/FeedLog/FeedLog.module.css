@@ -13,6 +13,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  transition: max-height 0.3s ease;
 }
 
 .eventBox {
@@ -164,4 +165,10 @@
   padding-bottom: 5px;
   font-weight: 400;
   font-family: monospace;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.feedLogTitle:hover {
+  color: #007acc;
 }

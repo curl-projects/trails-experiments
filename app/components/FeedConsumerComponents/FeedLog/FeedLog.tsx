@@ -233,16 +233,26 @@ const DataEventComponent = ({
 );
 
 export function FeedLog({ events }: FeedLogProps) {
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <div className={styles.feedLogContainer}>
-      <h3 className={styles.feedLogTitle}>Feed Event Log</h3>
-      <div className={styles.eventList}>
-        {events.map((event, index) => (
-          <div key={index} className={styles.eventWrapper}>
-            <ExpandableEvent event={event} />
-          </div>
-        ))}
-      </div>
+      <h3 className={styles.feedLogTitle} onClick={toggleExpand}>
+        Feed Event Log
+      </h3>
+      {isExpanded && (
+        <div className={styles.eventList}>
+          {events.map((event, index) => (
+            <div key={index} className={styles.eventWrapper}>
+              <ExpandableEvent event={event} />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

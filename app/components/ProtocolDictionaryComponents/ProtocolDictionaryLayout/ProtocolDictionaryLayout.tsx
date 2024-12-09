@@ -13,13 +13,9 @@ export function ProtocolDictionaryLayout({ protocols, events }: ProtocolDictiona
   return (
     <div className={styles.protocolDictionaryContainer}>
       <div className={styles.mainContent}>
-        <div className={styles.feedLog}>
-          <FeedLog events={events} />
-        </div>
-        <div className={styles.content}>
           <ProtocolList protocols={protocols} />
-        </div>
       </div>
+      <FeedLog events={events} />
     </div>
   );
 }

@@ -1,0 +1,40 @@
+.protocolCard {
+    background: #ffffff;
+    border: 1px solid #dedede;
+    border-radius: 6px;
+    padding: 1rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .protocolCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .content {
+    text-align: center;
+    display: flex;
+    font-size: 0.8rem;
+    font-family: monospace;
+    color: #333333;
+    align-items: center;
+  }
+
+  .types {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .type {
+    background: #f0f0f0;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    color: #555555;
+  }
+  
+  .arrow {
+    font-size: 1rem;
+    color: #888888;
+  }

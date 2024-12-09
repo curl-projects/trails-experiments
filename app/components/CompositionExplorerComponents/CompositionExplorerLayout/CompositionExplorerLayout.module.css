@@ -1,21 +1,59 @@
 .container {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding: 40px;
 }
 
-.mainContent {
+.compositeDescription {
+    flex: 1;
+    font-size: 1.5rem;
+    font-weight: bold;  
+    font-family: monospace;
+    padding: 1rem;
+}
+
+.compositeDescriptionPlaceholder {
+    color: lightgrey;
+}
+
+.innerContainer {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+.protocolContainer{
+    flex: 1;
+}
+
+.compositionsContainer{
+    flex: 1;
+    display: flex;
+
+}
+
+.codeOutputContainer {
+    flex: 2;
+    min-width: 25vw;
+    max-width: 25vw;
+    border: 2px solid red;
+}
+  
+  .mainContent {
     display: flex;
     flex: 1;
   }
-
+  
   .feedLog {
-    flex: 1; /* Left third */
-    padding: 10px;
-    overflow-y: auto;
+    width: 300px;
     border-right: 1px solid #ccc;
+    overflow-y: auto;
   }
   
   .content {
-    flex: 2; /* Right two-thirds */
-    padding: 10px;
+    flex: 1;
+    padding: 1rem;
   }

@@ -1,11 +1,11 @@
-import { Event, ConnectionEvent } from '~/types/FeedTypes';
+import { Event, ConnectionEvent, Protocol } from '~/types/FeedTypes';
 import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useEventContext } from '~/context/FeedEventContext';
 import { CompositionExplorerLayout } from "~/components/CompositionExplorerComponents/CompositionExplorerLayout/CompositionExplorerLayout"
 
 export default function CompositionExplorer() {
-  const [compositions, setCompositions] = useState<any[]>([]); // TODO: Define proper type
+  const [protocols, setProtocols] = useState<Protocol[]>([]);
   const { events, setEvents } = useEventContext();
   const ws = useRef<WebSocket | null>(null);
 
@@ -25,14 +25,14 @@ export default function CompositionExplorer() {
 
       // Request compositions when connection is established
       if (ws.current?.readyState === WebSocket.OPEN) {
-        // const message = {
-        //   type: 'get_compositions',
-        //   data: {
-        //     request_id: uuidv4()
-        //   }
-        // };
-        // console.log('Sending message:', message);
-        // ws.current.send(JSON.stringify(message));
+        const message = {
+          type: 'get_protocols',
+          data: {
+            request_id: uuidv4()
+          }
+        };
+        console.log('Sending message:', message);
+        ws.current.send(JSON.stringify(message));
       }
     };
 
@@ -43,8 +43,8 @@ export default function CompositionExplorer() {
         setEvents((prevEvents) => [...prevEvents, response]);
 
         if (response.event_type === 'data') {
-          console.log('Received compositions:', response.data);
-          setCompositions(response.data);
+          console.log('Received protocols:', response.data);
+          setProtocols(response.data);
         }
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
@@ -76,7 +76,7 @@ export default function CompositionExplorer() {
   return (
     <div>
       <CompositionExplorerLayout 
-        compositions={compositions}
+        protocols={protocols}
         events={events}
       />
     </div>

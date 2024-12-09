@@ -5,9 +5,11 @@ import { useState } from 'react';
 
 interface ProtocolListProps {
   protocols: Protocol[];
+  activeProtocolMode: boolean;
+  addProtocolToChain: (protocol: Protocol) => void;
 }
 
-export default function ProtocolList({ protocols }: ProtocolListProps) {
+export default function ProtocolList({ protocols, activeProtocolMode, addProtocolToChain }: ProtocolListProps) {
   console.log('protocols', protocols);
   // Group protocols by strategy
   const groupedProtocols = protocols.reduce((acc, protocol) => {
@@ -26,6 +28,8 @@ export default function ProtocolList({ protocols }: ProtocolListProps) {
           key={strategyName}
           strategyName={strategyName}
           protocols={protocols}
+          activeProtocolMode={activeProtocolMode}
+          addProtocolToChain={addProtocolToChain}
         />
       ))}
     </div>

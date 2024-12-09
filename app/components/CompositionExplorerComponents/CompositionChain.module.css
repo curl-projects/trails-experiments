@@ -1,0 +1,13 @@
+.compositionChain {
+    flex: 1;
+  }
+  
+  .chainList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .protocolCardContainer {
+    cursor: default;
+  }

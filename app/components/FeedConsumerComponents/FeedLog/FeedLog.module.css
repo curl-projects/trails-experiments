@@ -14,6 +14,7 @@
   flex-direction: column;
   gap: 0.75rem;
   transition: max-height 0.3s ease;
+  padding: 10px;
 }
 
 .eventBox {
@@ -152,23 +153,25 @@
 }
 
 .feedLogContainer {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 300px;
+  max-height: 80vh;
+  overflow-y: auto;
   border: 1px solid #ccc;
   border-radius: 5px;
-  padding: 10px;
   background-color: #1a1a1a;
+  padding: 0;
+  z-index: 1000;
 }
 
 .feedLogTitle {
   font-size: 1.2em;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 5px;
-  font-weight: 400;
-  font-family: monospace;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.feedLogTitle:hover {
-  color: #007acc;
+  margin: 0;
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
+  cursor: move;
+  user-select: none;
 }

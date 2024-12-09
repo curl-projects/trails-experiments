@@ -1,8 +1,8 @@
 // app/routes/feed-consumer.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import { ConnectionEvent, Event, TriggerEvent, ErrorEvent } from '~/types/FeedTypes';
-import { FeedContainer } from '~/components/FeedContainer/FeedContainer';
-import { FeedControls } from '~/components/FeedControls/FeedControls';
+import { FeedContainer } from '~/components/FeedConsumerComponents/FeedContainer/FeedContainer';
+import { FeedControls } from '~/components/FeedConsumerComponents/FeedControls/FeedControls';
 import { useEventContext } from '~/context/FeedEventContext';
 import { v4 as uuidv4 } from 'uuid';
 import { eventSchema } from '~/types/RuntimeFeedSchemas';

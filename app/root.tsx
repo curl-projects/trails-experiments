@@ -10,6 +10,7 @@ import type { LinksFunction } from "@remix-run/node";
 import "./tailwind.css";
 import { EventProvider } from "./context/FeedEventContext";
 import { FeedProvider } from "./context/FeedContext";
+import { Header } from './components/HeaderComponents/Header';
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -36,6 +37,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <FeedProvider>
           <EventProvider>
+            <Header />
             {children}
           </EventProvider>
         </FeedProvider>

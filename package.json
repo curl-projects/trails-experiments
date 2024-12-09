@@ -8,6 +8,9 @@
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
+    "generate-feed-schemas": "ts-to-zod ./app/types/FeedTypes.ts ./app/types/RuntimeFeedSchemas.ts --keepComments",
+    "generate-graph-schemas": "ts-to-zod ./app/types/GraphTypes.ts ./app/types/RuntimeGraphSchemas.ts --keepComments",
+    "generate-schemas": "npm run generate-feed-schemas && npm run generate-graph-schemas",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -21,7 +24,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",
-    "react-icons": "^5.4.0"
+    "react-icons": "^5.4.0",
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.15.0",

@@ -18,12 +18,12 @@ const AVAILABLE_STRATEGIES = [
 export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch }) => {
   const [inputNodes, setInputNodes] = useState('b509d1a2-e9f3-4605-b027-44eb62f10e6d');
   const [startTypes, setStartTypes] = useState('Post');
-  const [targetTypes, setTargetTypes] = useState('Author');
-  const [maxDepth, setMaxDepth] = useState(1);
+  const [targetTypes, setTargetTypes] = useState('Author, Concept');
+  const [maxDepth, setMaxDepth] = useState(2);
   const [minDepth, setMinDepth] = useState(1);
   const [totalCandidates, setTotalCandidates] = useState(100);
   const [preventCycles, setPreventCycles] = useState(true);
-  const [selectedStrategies, setSelectedStrategies] = useState(['Authorial Identity']);
+  const [selectedStrategies, setSelectedStrategies] = useState(['Authorial Identity', "Referential Similarity"]);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
 

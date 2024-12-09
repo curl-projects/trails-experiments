@@ -54,7 +54,9 @@ export function FeedCard({ rankedOutput }: FeedCardProps) {
                 <div className={styles.pathGroupDescription}>{description}</div>
               </div>
               {paths.map((path, index) => (
-                <Path key={index} path={path} />
+                <div key={index} className={styles.pathWrapper}>
+                    <Path path={path} />
+                </div>
               ))}
             </div>
           );
@@ -102,7 +104,9 @@ export function FeedCard({ rankedOutput }: FeedCardProps) {
               <div key={key} className={styles.pathGroup}>
                 <div className={styles.pathGroupTitle}>{key}</div>
                 {paths.map((path, index) => (
-                  <Path key={index} path={path} />
+                  <div key={index} className={styles.pathWrapper}>
+                    <Path path={path} />
+                  </div>
                 ))}
               </div>
             ))}

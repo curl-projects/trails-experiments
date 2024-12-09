@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Event, NodeEvent, ErrorEvent, ConnectionEvent, TriggerEvent } from '~/types/FeedTypes';
 import { Node } from '~/types/GraphTypes';
-import { FaPlusCircle, FaEdit, FaExclamationCircle, FaPlug, FaBolt, FaUnlink, FaCheckCircle } from 'react-icons/fa';
+import { FaPlus, FaPencilAlt, FaExclamationCircle, FaPlug, FaBolt, FaUnlink, FaCheckCircle } from 'react-icons/fa';
 
 import styles from './FeedLog.module.css';
 import { useFeedContext } from '~/context/FeedContext';
@@ -60,37 +60,55 @@ const ExpandableEvent: React.FC<ExpandableEventProps> = ({ event }) => {
   );
 };
 
-const AddEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
-  <div className={styles.addEvent}>
-    <div className={styles.eventContent}>
-      <FaPlusCircle className={styles.eventIcon} style={{ color: '#28a745', fontSize: '1.8rem' }} />
-      <span className={styles.nodeId}>{getNodeTitle(event.ranked_output?.output.node)}</span>
-      <span className={styles.eventDetails}>New node added to feed</span>
-    </div>
-    {isExpanded && (
-      <div className={styles.expandedDetails}>
-        <p>Ranking Score: {event.ranked_output.ranking_score}</p>
-        <p>Metadata: {JSON.stringify(event.ranked_output.output.metadata)}</p>
-      </div>
-    )}
-  </div>
-);
+const AddEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => {
+  const { getNodeTypeColors } = useFeedContext();
+  const node = event.ranked_output?.output.node;
+  const colors = getNodeTypeColors(node.labels[0]);
 
-const UpdateEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
-  <div className={styles.updateEvent}>
-    <div className={styles.eventContent}>
-      <FaEdit className={styles.eventIcon} />
-      <span className={styles.nodeId}>{event.ranked_output?.output.node.id}</span>
-      <span className={styles.eventDetails}>Node position updated</span>
-    </div>
-    {isExpanded && (
-      <div className={styles.expandedDetails}>
-        <p>Ranking Score: {event.ranked_output.ranking_score}</p>
-        <p>Metadata: {JSON.stringify(event.ranked_output.output.metadata)}</p>
+  return (
+    <div className={styles.addEvent}>
+      <div className={styles.eventContent}>
+        <FaPlus className={styles.eventIcon} style={{ color: 'purple', fontSize: '1.5rem' }} />
+        <span className={styles.eventDetails}>
+          <span className={styles.nodeValue} style={{ backgroundColor: colors.background, color: colors.text }}>
+            {getNodeTitle(node)}
+          </span> added to feed
+        </span>
       </div>
-    )}
-  </div>
-);
+      {isExpanded && (
+        <div className={styles.expandedDetails}>
+          <p>Ranking Score: {event.ranked_output.ranking_score}</p>
+          <p>Metadata: {JSON.stringify(event.ranked_output.output.metadata)}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const UpdateEvent = ({ event, isExpanded, getNodeTitle }: { event: NodeEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => {
+  const { getNodeTypeColors } = useFeedContext();
+  const node = event.ranked_output?.output.node;
+  const colors = getNodeTypeColors(node.labels[0]);
+
+  return (
+    <div className={styles.updateEvent}>
+      <div className={styles.eventContent}>
+        <FaPencilAlt className={styles.eventIcon} style={{ fontSize: '1.3rem', color: 'purple' }} />
+        <span className={styles.eventDetails}>
+          <span className={styles.nodeValue} style={{ backgroundColor: colors.background, color: colors.text }}>
+            {getNodeTitle(node)}
+          </span> position updated
+        </span>
+      </div>
+      {isExpanded && (
+        <div className={styles.expandedDetails}>
+          <p>Ranking Score: {event.ranked_output.ranking_score}</p>
+          <p>Metadata: {JSON.stringify(event.ranked_output.output.metadata)}</p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ErrorEventComponent = ({ event, isExpanded, getNodeTitle }: { event: ErrorEvent, isExpanded: boolean, getNodeTitle: (node: Node) => string }) => (
   <div className={styles.errorEvent}>

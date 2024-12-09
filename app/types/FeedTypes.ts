@@ -6,31 +6,37 @@ export interface Path {
   relationships: Relationship[];
 }
 
+
 export interface Strategy {
+  id: string;
   strategy_name: string;
-  path_map: Record<string, string>;
+  pathmap: Record<string, string>;
   disallowed_successors: Record<string, Array<Array<string>>>;
 }
 
 // Strategy and Composition Types
 export interface Protocol {
+  id: string;
   strategy: Strategy;
   input_type: string;
   output_type: string;
 }
 
 export interface Composition {
+  id: string;
   protocols: Protocol[];
   nl_description: string;
 }
 
 export interface ParameterizedComposition {
+  id: string;
   composition: Composition;
   params: Array<{ limit?: number; [key: string]: any; }>;
   probability: number | null;
 }
 
 export interface Output {
+  id: string;
   node: Node;
   parameterized_compositions: ParameterizedComposition[];
   metadata: {
@@ -68,6 +74,7 @@ export interface ProtocolDistribution {
 }
 
 export interface RankedOutput {
+  id: string;
   output: Output;
   ranking_score: number;
   ranking_distribution: RankingDistribution;
@@ -77,30 +84,35 @@ export interface RankedOutput {
 
 // Event Types
 export interface NodeEvent {
+  id: string;
   event_type: 'add' | 'update';
   ranked_output: RankedOutput;
   message?: string | null;
 }
 
 export interface ErrorEvent {
+  id: string;
   event_type: 'error';
   message: string;
   traceback?: string;
 }
 
 export interface ConnectionEvent {
+  id: string;
   event_type: 'connection';
   status: 'connected' | 'disconnected';
   timestamp: string;
 }
 
 export interface TriggerEvent {
+  id: string;
   event_type: 'trigger';
   action: string;
   timestamp: string;
 }
 
 export interface ValidationEvent {
+  id: string;
   event_type: 'validation';
   status: 'success' | 'failure';
   message: string;

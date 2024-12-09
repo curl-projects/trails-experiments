@@ -24,12 +24,12 @@ const FeedContext = createContext<FeedContextType | undefined>(undefined);
 export const FeedProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   
     const pathNameMap: Record<string, (node: Node) => string> = {
-        "Post": (node: Node) => node.labels[0] === "Post" ? `Post('${(node as PostNode).properties.title}')` : `Post(unknown)`,
-        "Author": (node: Node) => node.labels[0] === "Author" ? `Author('${(node as AuthorNode).properties.name}')` : `Author(unknown)`,
-        "Concept": (node: Node) => node.labels[0] === "Concept" ? `Concept('${(node as ConceptNode).properties.name}')` : `Concept(unknown)`,
-        "Entity": (node: Node) => node.labels[0] === "Entity" ? `Entity('${(node as EntityNode).properties.name}')` : `Entity(unknown)`,
-        "Account": (node: Node) => node.labels[0] === "Account" ? `Account('${(node as AccountNode).properties.username}')` : `Account(unknown)`
-      } as const;
+        "Post": (node: Node) => node.labels[0] === "Post" ? (node as PostNode).properties.title ?? 'unknown' : 'unknown',
+        "Author": (node: Node) => node.labels[0] === "Author" ? (node as AuthorNode).properties.name ?? 'unknown' : 'unknown',
+        "Concept": (node: Node) => node.labels[0] === "Concept" ? (node as ConceptNode).properties.name ?? 'unknown' : 'unknown',
+        "Entity": (node: Node) => node.labels[0] === "Entity" ? (node as EntityNode).properties.name ?? 'unknown' : 'unknown',
+        "Account": (node: Node) => node.labels[0] === "Account" ? (node as AccountNode).properties.username ?? 'unknown' : 'unknown'
+    } as const;
 
   const getNodeTitle = (node: Node): string => {
     const getTitle = pathNameMap[node.labels[0]];

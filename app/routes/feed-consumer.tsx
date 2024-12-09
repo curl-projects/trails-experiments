@@ -1,9 +1,11 @@
 // app/routes/feed-consumer.tsx
 import React, { useEffect, useState, useRef } from 'react';
-import { ConnectionEvent, Event, TriggerEvent } from '~/types/FeedTypes';
+import { ConnectionEvent, Event, TriggerEvent, ErrorEvent } from '~/types/FeedTypes';
 import { FeedContainer } from '~/components/FeedContainer/FeedContainer';
 import { FeedControls } from '~/components/FeedControls/FeedControls';
 import { useEventContext } from '~/context/FeedEventContext';
+import { v4 as uuidv4 } from 'uuid';
+import { eventSchema } from '~/types/RuntimeFeedSchemas';
 
 export default function FeedConsumer() {
   const { events, setEvents } = useEventContext();
@@ -15,6 +17,7 @@ export default function FeedConsumer() {
     ws.current.onopen = () => {
       console.log('Connected to the WebSocket server');
       const connectionEvent: ConnectionEvent = {
+        id: uuidv4(),
         event_type: 'connection',
         status: 'connected',
         timestamp: new Date().toISOString(),
@@ -26,7 +29,28 @@ export default function FeedConsumer() {
       try {
         const data: Event = JSON.parse(event.data);
         console.log('New event received:', data);
-        setEvents((prevEvents) => [...prevEvents, data]);
+        const parsedEvent = eventSchema.safeParse(data);
+        if(!parsedEvent.success) {
+          console.log('Invalid event:', data);
+          console.error('Invalid event:', parsedEvent.error);
+
+          const errorEvent: ErrorEvent = {
+            id: uuidv4(), // Generate a unique ID for the error event
+            event_type: 'error',
+            message: 'Failed to parse event',
+            traceback: JSON.stringify(parsedEvent.error.issues, null, 2), // Format error details with indentation 
+          };
+    
+          // Push the error event to the log
+          setEvents((prevEvents) => [...prevEvents, errorEvent]);
+    
+          return;
+        }
+
+        const validEvent: Event = parsedEvent.data as Event;
+        
+        setEvents((prevEvents) => [...prevEvents, validEvent]);
+
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
       }
@@ -39,6 +63,7 @@ export default function FeedConsumer() {
     ws.current.onclose = (event) => {
       console.log('WebSocket connection closed:', event);
       const disconnectionEvent: ConnectionEvent = {
+        id: uuidv4(),
         event_type: 'connection',
         status: 'disconnected',
         timestamp: new Date().toISOString(),
@@ -64,6 +89,7 @@ export default function FeedConsumer() {
       ws.current.send(JSON.stringify(message));
 
       const triggerEvent: TriggerEvent = {
+        id: uuidv4(),
         event_type: 'trigger',
         action: 'search',
         timestamp: new Date().toISOString(),

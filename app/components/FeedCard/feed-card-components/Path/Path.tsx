@@ -18,7 +18,7 @@ export function Path({ path }: PathProps) {
         const isReverse = relationship && relationship.end_node_id === node.id;
 
         return (
-          <React.Fragment key={node.id}>
+          <React.Fragment key={`path_${index}`}>
             <div className={styles.node}>
               <span className={styles.nodeContent}>
                 <span className={styles.nodeValue}>

@@ -1,4 +1,4 @@
-import { Event, ConnectionEvent, Protocol } from '~/types/FeedTypes';
+import { Event, ConnectionEvent, Protocol, ErrorEvent, DataEvent } from '~/types/FeedTypes';
 import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useEventContext } from '~/context/FeedEventContext';
@@ -6,6 +6,7 @@ import { CompositionExplorerLayout } from "~/components/CompositionExplorerCompo
 
 export default function CompositionExplorer() {
   const [protocols, setProtocols] = useState<Protocol[]>([]);
+  const [executable, setExecutable] = useState<string | null>(null);
   const { events, setEvents } = useEventContext();
   const ws = useRef<WebSocket | null>(null);
 
@@ -40,11 +41,45 @@ export default function CompositionExplorer() {
       try {
         const response = JSON.parse(event.data);
         console.log('Received response:', response);
-        setEvents((prevEvents) => [...prevEvents, response]);
 
-        if (response.event_type === 'data') {
+        if (response.event_type === 'data' && response.data_type === 'executable') {
+          console.log('Received executable:', response.data);
+          const dataEvent: DataEvent = {
+            id: uuidv4(),
+            event_type: 'data',
+            data_type: 'executable',
+            data: response.data,
+          };
+          setEvents((prevEvents) => [...prevEvents, dataEvent]);
+          setExecutable(response.data[0]);
+        }
+
+        else if (response.event_type === 'data' && response.data_type === 'protocols') {
           console.log('Received protocols:', response.data);
+
+          const dataEvent: DataEvent = {
+            id: uuidv4(),
+            event_type: 'data',
+            data_type: 'protocols',
+            data: response.data,
+          };
+          setEvents((prevEvents) => [...prevEvents, dataEvent]);
+
           setProtocols(response.data);
+        }
+       
+        else if (response.event_type === 'error') {
+          const errorEvent: ErrorEvent = {
+            id: uuidv4(),
+            event_type: 'error',
+            message: response.message,
+            traceback: response.traceback,
+          };
+          setEvents((prevEvents) => [...prevEvents, errorEvent]);
+        }
+        else{
+          console.log("HI")
+          console.error("Unknown event type:", response);
         }
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
@@ -78,6 +113,9 @@ export default function CompositionExplorer() {
       <CompositionExplorerLayout 
         protocols={protocols}
         events={events}
+        executable={executable}
+        setExecutable={setExecutable}
+        ws={ws}
       />
     </div>
   );

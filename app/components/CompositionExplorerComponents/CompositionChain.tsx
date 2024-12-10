@@ -5,12 +5,17 @@ import styles from './CompositionChain.module.css';
 
 interface CompositionChainProps {
   compositionChain: Protocol[];
+  setCompositionChain: (chain: Protocol[]) => void;
+  setExecutable: (executable: string) => void;
 }
 
-export function CompositionChain({ compositionChain }: CompositionChainProps) {
+export function CompositionChain({ compositionChain, setCompositionChain, setExecutable }: CompositionChainProps) {
   return (
     <div className={styles.compositionChain}>
-      <h3>Composition Chain</h3>
+      {compositionChain.length > 0 && <h3 className={styles.resetChain} onClick={() => {
+        setCompositionChain([]);
+        setExecutable('');
+      }}>Reset Chain</h3>}
       <div className={styles.chainList}>
         {compositionChain.map((protocol, index) => (
           <div key={index} className={styles.protocolCardContainer}>

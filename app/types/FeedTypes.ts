@@ -125,6 +125,7 @@ export interface DataEvent {
   id: string;
   event_type: 'data';
   data: any;
+  data_type: string;
 }
 
 export type Event = NodeEvent | ErrorEvent | ConnectionEvent | TriggerEvent | ValidationEvent | DataEvent;

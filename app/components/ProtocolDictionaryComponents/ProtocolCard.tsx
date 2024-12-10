@@ -27,7 +27,7 @@ export default function ProtocolCard({ protocol, activeProtocolMode, addProtocol
       onClick={handleClick}
       style={{
         height: isExpanded ? 'auto' : '120px',
-        maxWidth: activeProtocolMode ? '250px' : 'inherit'
+        maxWidth: activeProtocolMode ? '250px' : '300px'
       }}
       >
 

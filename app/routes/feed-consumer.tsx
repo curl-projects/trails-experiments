@@ -12,7 +12,7 @@ export default function FeedConsumer() {
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    setEvents([]);
+    
     ws.current = new WebSocket('ws://127.0.0.1:6789');
 
     ws.current.onopen = () => {

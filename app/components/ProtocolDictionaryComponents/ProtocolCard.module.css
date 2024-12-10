@@ -5,6 +5,13 @@
   padding: 1.5rem;
   transition: transform 0.2s ease;
   cursor: pointer;
+
+
+  
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #121212;
+  color: rgb(157, 163, 174);
 }
 
 .protocolCard:hover {
@@ -29,6 +36,8 @@
   border-radius: 4px;
   font-size: 0.9rem;
   color: #666;
+  /* text-transform: uppercase; */
+  font-family: monospace;
 }
 
 .nlDescriptionContainer {
@@ -39,9 +48,10 @@
 
 .nlDescription {
   font-size: 0.9rem;
-  color: #666;
   font-family: monospace;
   text-align: center;
+  color: rgb(157, 163, 174);
+
 }
 
 .arrow {
@@ -56,7 +66,8 @@
 }
 
 .codeBlock {
-  background: #f5f5f5;
+  background-color: #121212;
+  border: 1px solid #ccc;
   border-radius: 4px;
   padding: 1rem;
   font-family: monospace;

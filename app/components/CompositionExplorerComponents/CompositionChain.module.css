@@ -11,3 +11,16 @@
   .protocolCardContainer {
     cursor: default;
   }
+
+  .resetChain {
+    cursor: pointer;
+    color: lightgrey;
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: 200;
+  }
+
+  .resetChain:hover {
+    color: white;
+    text-decoration: underline;
+  }

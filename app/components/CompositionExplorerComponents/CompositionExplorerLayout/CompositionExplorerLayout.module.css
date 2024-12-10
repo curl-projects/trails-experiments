@@ -35,25 +35,4 @@
 
 }
 
-.codeOutputContainer {
-    flex: 2;
-    min-width: 25vw;
-    max-width: 25vw;
-    border: 2px solid red;
-}
-  
-  .mainContent {
-    display: flex;
-    flex: 1;
-  }
-  
-  .feedLog {
-    width: 300px;
-    border-right: 1px solid #ccc;
-    overflow-y: auto;
-  }
-  
-  .content {
-    flex: 1;
-    padding: 1rem;
-  }
+/* Additional styles (if any) */

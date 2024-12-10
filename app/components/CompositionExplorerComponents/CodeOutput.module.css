@@ -1,0 +1,15 @@
+.codeOutputContainer {
+    flex: 2;
+    min-width: 30vw;
+    max-width: 30vw;
+    font-size: 10px;
+    padding: 0px 30px;
+  }
+
+.codeOutputCopy {
+    cursor: pointer;
+    color: lightgray;
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: 200;
+}

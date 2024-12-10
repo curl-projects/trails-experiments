@@ -10,6 +10,7 @@ import type { LinksFunction } from "@remix-run/node";
 import "./tailwind.css";
 import { EventProvider } from "./context/FeedEventContext";
 import { FeedProvider } from "./context/FeedContext";
+import { WebSocketProvider } from "~/context/WebSocketContext";
 import { Header } from './components/HeaderComponents/Header';
 
 export const links: LinksFunction = () => [
@@ -35,12 +36,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <FeedProvider>
-          <EventProvider>
-            <Header />
-            {children}
-          </EventProvider>
-        </FeedProvider>
+        <WebSocketProvider>
+          <FeedProvider>
+            <EventProvider>
+              <Header />
+              {children}
+            </EventProvider>
+          </FeedProvider>
+        </WebSocketProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

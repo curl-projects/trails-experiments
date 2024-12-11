@@ -22,6 +22,17 @@ export default function Executor() {
         timestamp: new Date().toISOString(),
       };
       setEvents((prevEvents) => [...prevEvents, connectionEvent]);
+
+      if(ws.current?.readyState === WebSocket.OPEN) {
+        const message = {
+          type: 'get_graph',
+          data: {
+            request_id: uuidv4()
+          }
+        };
+        console.log('Sending message:', message);
+        ws.current.send(JSON.stringify(message));
+      }
     };
 
     ws.current.onmessage = (event) => {

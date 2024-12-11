@@ -6,6 +6,8 @@ import ProtocolList from '~/components/ProtocolDictionaryComponents/ProtocolList
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { CodeOutput } from '../CodeOutput';
+import { OutputDisplay } from '~/components/ExecutorComponents/OutputDisplay';
+import { Path } from '~/components/FeedConsumerComponents/FeedCard/feed-card-components/Path/Path';
 
 interface CompositionExplorerLayoutProps {
   ws: React.RefObject<WebSocket | null> | null;
@@ -13,6 +15,7 @@ interface CompositionExplorerLayoutProps {
   protocols: Protocol[];
   executable: string | null;
   setExecutable: (executable: string) => void;
+  pathData: any;
 }
 
 export function CompositionExplorerLayout({
@@ -21,9 +24,12 @@ export function CompositionExplorerLayout({
   protocols,
   executable,
   setExecutable,
+  pathData,
 }: CompositionExplorerLayoutProps) {
   const [availableProtocols, setAvailableProtocols] = useState<Protocol[]>(protocols);
   const [compositionChain, setCompositionChain] = useState<Protocol[]>([]);
+  const [showNewView, setShowNewView] = useState<boolean>(false);
+  const [activeTraversalPath, setActiveTraversalPath] = useState<any>(null);
 
   useEffect(() => {
     filterAvailableProtocols();
@@ -64,8 +70,11 @@ export function CompositionExplorerLayout({
     setCompositionChain([...compositionChain, protocol]);
   }
 
+  function toggleView() {
+    setShowNewView(!showNewView);
+  }
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${showNewView ? styles.newViewActive : ''}`}>
       <div className={styles.compositeDescription}>
         {compositionChain.length > 0 ? (
           <p>{compositionChain.map((protocol) => protocol.natural_language_description).join(' ')}</p>
@@ -76,22 +85,82 @@ export function CompositionExplorerLayout({
         )}
       </div>
       <div className={styles.innerContainer}>
-        <div className={styles.protocolContainer}>
-          <ProtocolList
-            protocols={availableProtocols}
-            activeProtocolMode={true}
-            addProtocolToChain={addProtocolToChain}
-          />
+        {/* First View */}
+        <div className={styles.view}>
+          <div className={styles.protocolContainer}>
+            <ProtocolList
+              protocols={availableProtocols}
+              activeProtocolMode={true}
+              addProtocolToChain={addProtocolToChain}
+            />
+          </div>
+          <div className={styles.compositionsContainer}>
+            <CompositionChain
+              compositionChain={compositionChain}
+              setCompositionChain={setCompositionChain}
+              setExecutable={setExecutable}
+              showNewView={showNewView}
+            />
+            <CodeOutput
+              executable={executable}
+              showNewView={showNewView}
+              setShowNewView={setShowNewView}
+            />
+          </div>
         </div>
-        <div className={styles.compositionsContainer}>
-          <CompositionChain
-            compositionChain={compositionChain}
-            setCompositionChain={setCompositionChain}
-            setExecutable={setExecutable}
-          />
-          <CodeOutput executable={executable} />
+        {/* Second View */}
+        <div className={styles.view}>
+          <div
+            className={styles.compositionsContainer}
+            style={{
+              flexDirection: 'column',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                maxHeight: '40vh',
+                overflowY: 'auto',
+              }}
+            >
+              <CompositionChain
+                compositionChain={compositionChain}
+                setCompositionChain={setCompositionChain}
+                setExecutable={setExecutable}
+                showNewView={showNewView}
+              />
+              <CodeOutput
+                executable={executable}
+                showNewView={showNewView}
+                setShowNewView={setShowNewView}
+              />
+            </div>
+            <div className={styles.pathContainer}>
+              {pathData?.[0]?.paths &&
+                Object.entries(pathData[0]?.paths).map(([key, paths]) => {
+                  return (
+                    <div key={key}>
+                      {paths.map((path: any, index: number) => (
+                        <div key={index} className={styles.pathWrapper}>
+                          <Path path={path} />
+                          <div className={styles.pathButton}>
+                            <button onClick={() => setActiveTraversalPath({...path})}>Traverse Path</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+          <div className={styles.newView}>
+            <OutputDisplay
+              events={events}
+              pathData={pathData}
+              traversalPath={activeTraversalPath}
+            />
+          </div>
         </div>
-        <FeedLog events={events} />
       </div>
     </div>
   );

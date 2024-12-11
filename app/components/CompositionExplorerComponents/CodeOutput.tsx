@@ -5,9 +5,11 @@ import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
 interface CodeOutputProps {
   executable: string | null;
+  showNewView: boolean;
+  setShowNewView: (showNewView: boolean) => void;
 }
 
-export function CodeOutput({ executable }: CodeOutputProps) {
+export function CodeOutput({ executable, showNewView, setShowNewView }: CodeOutputProps) {
   const [displayedExecutable, setDisplayedExecutable] = useState('');
 
   useEffect(() => {
@@ -16,7 +18,15 @@ export function CodeOutput({ executable }: CodeOutputProps) {
 
   return (
     <div className={styles.codeOutputContainer}>
-        {displayedExecutable && <p className={styles.codeOutputCopy}>Copy</p>}
+        {displayedExecutable && 
+            <p 
+                className={styles.codeOutputCopy}
+                onClick={() => {
+                    setShowNewView(!showNewView);
+                }}
+            >{showNewView ? 'Back' : 'Execute'}
+            </p>
+            }
       <SyntaxHighlighter
         language="cypher"
         style={docco}

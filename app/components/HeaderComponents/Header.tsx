@@ -10,7 +10,7 @@ export function Header() {
           
           <li><Link to="/protocol-dictionary">Protocol Dictionary</Link></li>
           <li><Link to="/composition-explorer">Composition Explorer</Link></li>
-          <li><Link to="/executor">Executor</Link></li>
+          <li><Link to="/distribution-visualizer">Feed Updates</Link></li>
           <li><Link to="/feed-consumer">Feed Generator</Link></li>
         </ul>
       </nav>

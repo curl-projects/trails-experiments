@@ -7,6 +7,8 @@ import { CompositionExplorerLayout } from "~/components/CompositionExplorerCompo
 export default function CompositionExplorer() {
   const [protocols, setProtocols] = useState<Protocol[]>([]);
   const [executable, setExecutable] = useState<string | null>(null);
+  const [pathData, setPathData] = useState<any>(null);
+
   const { events, setEvents } = useEventContext();
   const ws = useRef<WebSocket | null>(null);
 
@@ -34,6 +36,16 @@ export default function CompositionExplorer() {
         };
         console.log('Sending message:', message);
         ws.current.send(JSON.stringify(message));
+
+        const graphMessage = {
+          type: 'get_graph',
+          data: {
+            request_id: uuidv4()
+          }
+        };
+        console.log('Sending graph message:', graphMessage);
+        ws.current.send(JSON.stringify(graphMessage));
+
       }
     };
 
@@ -77,6 +89,27 @@ export default function CompositionExplorer() {
           };
           setEvents((prevEvents) => [...prevEvents, errorEvent]);
         }
+        else if(response.event_type === 'data' && response.data_type === 'graph'){
+          console.log('Received graph:', response.data);
+          const dataEvent: DataEvent = {
+            id: uuidv4(),
+            event_type: 'data',
+            data_type: 'graph',
+            data: response.data,
+          };
+          setEvents((prevEvents) => [...prevEvents, dataEvent]);
+        }
+        else if(response.event_type === 'data' && response.data_type === 'path_results'){
+          console.log('Received path results:', response.data);
+          const dataEvent: DataEvent = {
+            id: uuidv4(),
+            event_type: 'data',
+            data_type: 'path_results',
+            data: response.data,
+          };
+          setEvents((prevEvents) => [...prevEvents, dataEvent]);
+          setPathData(response.data);
+        }
         else{
           console.log("HI")
           console.error("Unknown event type:", response);
@@ -115,6 +148,7 @@ export default function CompositionExplorer() {
         events={events}
         executable={executable}
         setExecutable={setExecutable}
+        pathData={pathData}
         ws={ws}
       />
     </div>

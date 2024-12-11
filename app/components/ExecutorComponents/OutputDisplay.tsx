@@ -21,10 +21,12 @@ interface LinkData {
 
 interface OutputDisplayProps {
   events: Event[];
+  pathData: any;
+  traversalPath: any;
 }
 
 // Lazy import the wrapper component
-const ForceGraph2D = React.lazy(() => import('./ForceGraph2DWrapper'));
+const ForceGraph2D = React.lazy(() => import('~/components/ExecutorComponents/ForceGraph2DWrapper'));
 
 // Function to generate a random color
 const getRandomColor = () => {
@@ -36,11 +38,66 @@ const getRandomColor = () => {
   return color;
 };
 
-export function OutputDisplay({ events }: OutputDisplayProps) {
+export function OutputDisplay({ events, pathData, traversalPath }: OutputDisplayProps) {
   const [graphData, setGraphData] = useState<{ nodes: NodeData[]; links: LinkData[] }>({
     nodes: [],
     links: [],
   });
+
+  useEffect(() => {
+    console.log("TRAVERSAL PATH:", traversalPath);
+    if (traversalPath) {
+      // Create mappings from internal IDs to properties.id
+      const nodeIdToPropertiesId: { [key: string]: string } = {};
+      traversalPath.nodes.forEach((node) => {
+        nodeIdToPropertiesId[node.id] = node.properties.id;
+      });
+
+      const relIdToPropertiesId: { [key: string]: string } = {};
+      traversalPath.relationships.forEach((rel) => {
+        relIdToPropertiesId[rel.id] = rel.properties.id;
+      });
+
+      // Initialize the path array
+      const path: string[] = [];
+
+      // Start from the first relationship's start node
+      if (traversalPath.relationships.length > 0) {
+        let currentNodeId = traversalPath.relationships[0].start_node_id;
+        path.push(nodeIdToPropertiesId[currentNodeId]);
+
+        // Iterate over relationships to build the path
+        traversalPath.relationships.forEach((rel) => {
+          // Add relationship's properties.id
+          path.push(rel.properties.id);
+
+          // Add the next node's properties.id
+          const nextNodeId = rel.end_node_id;
+          path.push(nodeIdToPropertiesId[nextNodeId]);
+
+          // Update current node ID for next iteration
+          currentNodeId = nextNodeId;
+        });
+      } else if (traversalPath.nodes.length > 0) {
+        // If there are no relationships, add nodes' properties.id to path
+        traversalPath.nodes.forEach((node) => {
+          path.push(node.properties.id);
+        });
+      }
+
+      // Create the new traversal object
+      const newTraversal = {
+        path: path,
+        progress: 0,
+        color: 'red',
+      };
+
+      console.log("NEW TRAVERSAL:", newTraversal);
+
+      // Update the active traversals state
+      setActiveTraversals([newTraversal]);
+    }
+  }, [traversalPath]);
 
   const fgRef = useRef<ForceGraphMethods>();
   const outputPanelRef = useRef<HTMLDivElement>(null);
@@ -55,6 +112,10 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
   const [activeTraversals, setActiveTraversals] = useState<
     { path: string[]; progress: number; color: string }[]
   >([]);
+
+  useEffect(()=>{
+    console.log("PATH DATA:", pathData)
+  }, [pathData])
 
   // Function to update dimensions
   const updateDimensions = () => {
@@ -241,7 +302,7 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
           })
           .filter((traversal) => traversal.progress < traversal.path.length)
       );
-    }, 1000); // Update every 1000ms
+    }, 500); // Adjust interval as desired
 
     return () => clearInterval(interval);
   }, [activeTraversals]);
@@ -303,8 +364,12 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
                   if (activeTraversals.length > 0) {
                     const traversal = activeTraversals[0]; // Since we're resetting traversals, only one traversal will be active
 
-                    const index = traversal.path.indexOf(node.id);
-                    if (index >= 0 && index < traversal.progress) {
+                    const nodeIndices = traversal.path
+                      .map((id, idx) => ({ id, idx }))
+                      .filter(({ id, idx }) => id === node.id && idx % 2 === 0)
+                      .map(({ idx }) => idx);
+
+                    if (nodeIndices.some((index) => index <= traversal.progress)) {
                       isInTraversal = true;
                     }
                   }
@@ -361,15 +426,12 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
                   if (activeTraversals.length > 0) {
                     const traversal = activeTraversals[0];
 
-                    const sourceIndex = traversal.path.indexOf(start.id);
-                    const targetIndex = traversal.path.indexOf(end.id);
-                    if (
-                      sourceIndex >= 0 &&
-                      targetIndex >= 0 &&
-                      sourceIndex < traversal.progress &&
-                      targetIndex < traversal.progress &&
-                      Math.abs(sourceIndex - targetIndex) === 1
-                    ) {
+                    const linkIndices = traversal.path
+                      .map((id, idx) => ({ id, idx }))
+                      .filter(({ id, idx }) => id === link.id && idx % 2 === 1)
+                      .map(({ idx }) => idx);
+
+                    if (linkIndices.some((index) => index <= traversal.progress)) {
                       isInTraversal = true;
                     }
                   }

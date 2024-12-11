@@ -7,12 +7,13 @@ interface CompositionChainProps {
   compositionChain: Protocol[];
   setCompositionChain: (chain: Protocol[]) => void;
   setExecutable: (executable: string) => void;
+  showNewView: boolean;
 }
 
-export function CompositionChain({ compositionChain, setCompositionChain, setExecutable }: CompositionChainProps) {
+export function CompositionChain({ compositionChain, setCompositionChain, setExecutable, showNewView }: CompositionChainProps) {
   return (
     <div className={styles.compositionChain}>
-      {compositionChain.length > 0 && <h3 className={styles.resetChain} onClick={() => {
+      {compositionChain.length > 0 && !showNewView && <h3 className={styles.resetChain} onClick={() => {
         setCompositionChain([]);
         setExecutable('');
       }}>Reset Chain</h3>}

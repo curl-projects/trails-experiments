@@ -3,7 +3,6 @@ import { ClientOnly } from 'remix-utils/client-only';
 import styles from './OutputDisplay.module.css';
 import { Event } from '~/types/FeedTypes';
 import type { ForceGraphMethods } from 'react-force-graph-2d';
-// import * as d3 from 'd3-force';
 
 interface NodeData {
   id: string;
@@ -23,6 +22,11 @@ interface LinkData {
 interface OutputDisplayProps {
   events: Event[];
 }
+
+// Lazy import the wrapper component
+const ForceGraph2D = React.lazy(() =>
+  import('./ForceGraph2DWrapper')
+);
 
 export function OutputDisplay({ events }: OutputDisplayProps) {
   const [graphData, setGraphData] = useState<{ nodes: NodeData[]; links: LinkData[] }>({
@@ -118,36 +122,40 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
 
   // Ensure the graph is centered and appropriately zoomed
   useEffect(() => {
+    console.log("HELLO! OUTSIDE", fgRef.current)
     if (fgRef.current) {
+        console.log("HELLO!")
+
+        fgRef.current.d3ReheatSimulation(); // Re-heats the simulation to apply new forces
+
+        fgRef.current.d3Force('charge')?.strength(-500); // Increase the negative value for more repulsion
+        // fgRef.current.d3Force('link')?.distance(600); // Increase link distance
+
       // Disable the default centering force
-      fgRef.current.d3Force('center', null);
+    //   fgRef.current.d3Force('center', null);
 
       // Increase the repulsive force to spread nodes out more
-      fgRef.current.d3Force('charge')?.strength(-200); // Increase the negative value for more repulsion
+      
 
       // Adjust the link distance
-      fgRef.current.d3Force('link')?.distance(150); // Increase link distance
-
-      setTimeout(() => {
-        fgRef.current.zoomToFit(500, 50); // Duration: 500ms, Padding: 50px
-      }, 500);
+    //   fgRef.current.d3Force('link')?.distance(150); // Increase link distance
+        // fgRef.current.d3ReheatSimulation(); // Re-heats the simulation to apply new forces
+    //   setTimeout(() => {
+    //     // fgRef.current.zoomToFit(500, 50); // Duration: 500ms, Padding: 50px
+    //   }, 500);
     }
-  }, [graphData]);
+  }, [graphData, fgRef.current]);
 
   return (
     <div className={styles.outputPanel} ref={outputPanelRef}>
       <ClientOnly>
         {() => {
-          const ForceGraph2D = React.lazy(() =>
-            import('react-force-graph-2d').then((module) => ({
-              default: module.default || module,
-            }))
-          );
-
           return (
             <Suspense fallback={<div>Loading graph...</div>}>
               <ForceGraph2D
                 ref={fgRef}
+                // forceEngine={"d3"}
+                // d3Force={}
                 graphData={graphData}
                 nodeLabel={(node) => {
                   // Construct HTML content for tooltip
@@ -181,8 +189,8 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
                 nodeCanvasObjectMode={() => 'replace'}
                 nodeCanvasObject={(node, ctx, globalScale) => {
                   const label = node.name;
-                  const fontSize = Math.max(8, 12 / globalScale);
-                  ctx.font = `${fontSize}px Sans-Serif`;
+                  const fontSize = Math.max(2, 4 / globalScale); // Adjusted font size for better readability
+                  ctx.font = `${fontSize}px monospace`;
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
 
@@ -198,9 +206,31 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
                   ctx.strokeStyle = 'white';
                   ctx.stroke();
 
-                  // Draw node label
-                  ctx.fillStyle = 'white';
-                  ctx.fillText(label, node.x, node.y);
+                  // Word wrap logic
+                  const maxWidth = radius * 2; // Maximum width for text wrapping
+                  const words = label.split(' ');
+                  let line = '';
+                  const lines = [];
+                  for (let n = 0; n < words.length; n++) {
+                    const testLine = line + words[n] + ' ';
+                    const metrics = ctx.measureText(testLine);
+                    const testWidth = metrics.width;
+                    if (testWidth > maxWidth && n > 0) {
+                      lines.push(line);
+                      line = words[n] + ' ';
+                    } else {
+                      line = testLine;
+                    }
+                  }
+                  lines.push(line);
+
+                  // Draw each line of text
+                  const lineHeight = fontSize * 1.2; // Adjust line height as needed
+                  const yOffset = -(lines.length - 1) * lineHeight / 2; // Center the text vertically
+                  lines.forEach((line, index) => {
+                    ctx.fillStyle = 'white';
+                    ctx.fillText(line, node.x, node.y + yOffset + (index * lineHeight));
+                  });
                 }}
                 linkCanvasObjectMode={() => 'after'}
                 linkCanvasObject={(link, ctx, globalScale) => {

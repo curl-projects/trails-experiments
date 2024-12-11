@@ -8,6 +8,7 @@ export default function CompositionExplorer() {
   const [protocols, setProtocols] = useState<Protocol[]>([]);
   const [executable, setExecutable] = useState<string | null>(null);
   const [pathData, setPathData] = useState<any>(null);
+  const [nlDescription, setNlDescription] = useState<string | null>(null);
 
   const { events, setEvents } = useEventContext();
   const ws = useRef<WebSocket | null>(null);
@@ -110,6 +111,17 @@ export default function CompositionExplorer() {
           setEvents((prevEvents) => [...prevEvents, dataEvent]);
           setPathData(response.data);
         }
+        else if(response.event_type === 'data' && response.data_type === 'nl_description'){
+          console.log('Received nl description:', response.data);
+          const dataEvent: DataEvent = {
+            id: uuidv4(),
+            event_type: 'data',
+            data_type: 'nl_description',
+            data: response.data,
+          };
+          setNlDescription(response.data);
+          setEvents((prevEvents) => [...prevEvents, dataEvent]);
+        }
         else{
           console.log("HI")
           console.error("Unknown event type:", response);
@@ -150,6 +162,7 @@ export default function CompositionExplorer() {
         setExecutable={setExecutable}
         pathData={pathData}
         ws={ws}
+        nlDescription={nlDescription}
       />
     </div>
   );

@@ -16,6 +16,7 @@ interface CompositionExplorerLayoutProps {
   executable: string | null;
   setExecutable: (executable: string) => void;
   pathData: any;
+  nlDescription: string | null;
 }
 
 export function CompositionExplorerLayout({
@@ -25,6 +26,7 @@ export function CompositionExplorerLayout({
   executable,
   setExecutable,
   pathData,
+  nlDescription,
 }: CompositionExplorerLayoutProps) {
   const [availableProtocols, setAvailableProtocols] = useState<Protocol[]>(protocols);
   const [compositionChain, setCompositionChain] = useState<Protocol[]>([]);
@@ -77,7 +79,7 @@ export function CompositionExplorerLayout({
     <div className={`${styles.container} ${showNewView ? styles.newViewActive : ''}`}>
       <div className={styles.compositeDescription}>
         {compositionChain.length > 0 ? (
-          <p>{compositionChain.map((protocol) => protocol.natural_language_description).join(' ')}</p>
+          <p>{nlDescription}</p>
         ) : (
           <p className={styles.compositeDescriptionPlaceholder}>
             <span>▼</span> Select an example or build your own

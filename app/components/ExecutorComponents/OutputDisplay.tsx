@@ -24,9 +24,17 @@ interface OutputDisplayProps {
 }
 
 // Lazy import the wrapper component
-const ForceGraph2D = React.lazy(() =>
-  import('./ForceGraph2DWrapper')
-);
+const ForceGraph2D = React.lazy(() => import('./ForceGraph2DWrapper'));
+
+// Function to generate a random color
+const getRandomColor = () => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 
 export function OutputDisplay({ events }: OutputDisplayProps) {
   const [graphData, setGraphData] = useState<{ nodes: NodeData[]; links: LinkData[] }>({
@@ -43,6 +51,11 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
     height: 0,
   });
 
+  // State to store active traversals
+  const [activeTraversals, setActiveTraversals] = useState<
+    { path: string[]; progress: number; color: string }[]
+  >([]);
+
   // Function to update dimensions
   const updateDimensions = () => {
     if (outputPanelRef.current) {
@@ -54,10 +67,6 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
   };
 
   useEffect(() => {
-    console.log("Graph Data:", graphData)
-  }, [graphData])
-
-  useEffect(() => {
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
     return () => {
@@ -65,6 +74,7 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
     };
   }, []);
 
+  // Process events to set graph data
   useEffect(() => {
     events.forEach((event) => {
       if (event.event_type === 'data' && event.data_type === 'graph') {
@@ -72,10 +82,18 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
 
         // Define a custom color array
         const colors = [
-          '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
-          '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'
-                  ];
-        let colorIndex = 0;  
+          '#1f77b4',
+          '#ff7f0e',
+          '#2ca02c',
+          '#d62728',
+          '#9467bd',
+          '#8c564b',
+          '#e377c2',
+          '#7f7f7f',
+          '#bcbd22',
+          '#17becf',
+        ];
+        let colorIndex = 0;
         // Create a color mapping based on labels
         const labelColors: { [label: string]: string } = {};
 
@@ -122,40 +140,124 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
 
   // Ensure the graph is centered and appropriately zoomed
   useEffect(() => {
-    console.log("HELLO! OUTSIDE", fgRef.current)
     if (fgRef.current) {
-        console.log("HELLO!")
+      fgRef.current.d3ReheatSimulation(); // Re-heats the simulation to apply new forces
 
-        fgRef.current.d3ReheatSimulation(); // Re-heats the simulation to apply new forces
-
-        fgRef.current.d3Force('charge')?.strength(-500); // Increase the negative value for more repulsion
-        // fgRef.current.d3Force('link')?.distance(600); // Increase link distance
-
-      // Disable the default centering force
-    //   fgRef.current.d3Force('center', null);
-
-      // Increase the repulsive force to spread nodes out more
-      
-
-      // Adjust the link distance
-    //   fgRef.current.d3Force('link')?.distance(150); // Increase link distance
-        // fgRef.current.d3ReheatSimulation(); // Re-heats the simulation to apply new forces
-    //   setTimeout(() => {
-    //     // fgRef.current.zoomToFit(500, 50); // Duration: 500ms, Padding: 50px
-    //   }, 500);
+      fgRef.current.d3Force('charge')?.strength(-400); // Increase the negative value for more repulsion
+      fgRef.current.d3Force('link')?.distance(75); // Increase link distance
     }
-  }, [graphData, fgRef.current]);
+  }, [graphData]);
+
+  // Function to handle random traversal
+  const handleRandomTraversal = () => {
+    const newTraversal = generateRandomTraversal();
+    if (newTraversal) {
+      // Reset previous traversals
+      setActiveTraversals([newTraversal]);
+    }
+  };
+
+  // Function to generate a random traversal path
+  const generateRandomTraversal = () => {
+    const { nodes, links } = graphData;
+    if (nodes.length === 0) return null;
+
+    // Start from a random node
+    const startNode = nodes[Math.floor(Math.random() * nodes.length)];
+    const visited = new Set<string>();
+    const path: string[] = [];
+
+    let currentNode = startNode;
+
+    // Generate random path length between 3 and 8
+    let steps = 12; // Random number between 3 and 8
+
+    while (currentNode && steps > 0) {
+      path.push(currentNode.id);
+      visited.add(currentNode.id);
+
+      console.log("VISITED:", visited)
+
+      // Get all outgoing links from current node
+      const outgoingLinks = links.filter((link) => {
+        const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+        const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+        return (
+          (sourceId === currentNode.id && !visited.has(targetId)) ||
+          (targetId === currentNode.id && !visited.has(sourceId))
+        );
+      });
+
+      console.log("CURRENT NODE:", currentNode);
+      console.log("LINKS:", links);
+      console.log("OUTGOING LINKS:", outgoingLinks);
+      if (outgoingLinks.length === 0) break;
+
+      // Randomly select one of the outgoing links
+      const randomLink = outgoingLinks[Math.floor(Math.random() * outgoingLinks.length)];
+      const sourceId = typeof randomLink.source === 'object' ? randomLink.source.id : randomLink.source;
+      const targetId = typeof randomLink.target === 'object' ? randomLink.target.id : randomLink.target;
+
+      // If current node is the source, go to target; if it's the target, go to source
+      currentNode = nodes.find((node) => 
+        node.id === (currentNode.id === sourceId ? targetId : sourceId)
+      );
+      steps--;
+
+    //   if (path.length < 3) {
+    //     console.log('Generated path is too short, retrying...');
+    //     return generateRandomTraversal();
+    //   }
+  
+    }
+
+    // Assign a random color to this traversal
+    const color = 'red'; // Use red color for traversal path
+
+    // Log the generated traversal path
+    console.log('Generated Traversal Path:', path);
+
+    return { path, progress: 0, color };
+  };
+
+  // Update traversal progress over time
+  useEffect(() => {
+    if (activeTraversals.length === 0) return;
+
+    const interval = setInterval(() => {
+      setActiveTraversals((prevTraversals) =>
+        prevTraversals
+          .map((traversal) => {
+            if (traversal.progress < traversal.path.length) {
+              const updatedTraversal = {
+                ...traversal,
+                progress: traversal.progress + 1,
+              };
+              console.log('Traversal Progress:', updatedTraversal);
+              return updatedTraversal;
+            } else {
+              return traversal;
+            }
+          })
+          .filter((traversal) => traversal.progress < traversal.path.length)
+      );
+    }, 1000); // Update every 1000ms
+
+    return () => clearInterval(interval);
+  }, [activeTraversals]);
 
   return (
     <div className={styles.outputPanel} ref={outputPanelRef}>
+      <button className={styles.traversalButton} onClick={handleRandomTraversal}>
+        Traverse Graph
+      </button>
       <ClientOnly>
         {() => {
           return (
             <Suspense fallback={<div>Loading graph...</div>}>
               <ForceGraph2D
                 ref={fgRef}
-                // forceEngine={"d3"}
-                // d3Force={}
+                backgroundColor={"dark"} // Add this line for transparency
                 graphData={graphData}
                 nodeLabel={(node) => {
                   // Construct HTML content for tooltip
@@ -194,16 +296,29 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
 
+                  // Determine if the node is part of any active traversal
+                  let nodeColor = node.color || 'gray';
+                  let isInTraversal = false; // Flag to determine if node is in traversal
+
+                  if (activeTraversals.length > 0) {
+                    const traversal = activeTraversals[0]; // Since we're resetting traversals, only one traversal will be active
+
+                    const index = traversal.path.indexOf(node.id);
+                    if (index >= 0 && index < traversal.progress) {
+                      isInTraversal = true;
+                    }
+                  }
+
                   // Draw node with increased size
                   const radius = node.val ? Math.sqrt(node.val) * 5 : 10;
-                  ctx.fillStyle = node.color || 'gray';
+                  ctx.fillStyle = nodeColor;
                   ctx.beginPath();
                   ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false);
                   ctx.fill();
 
-                  // Optionally draw node border
-                  ctx.lineWidth = 1;
-                  ctx.strokeStyle = 'white';
+                  // Draw node border
+                  ctx.lineWidth = isInTraversal ? 3 : 1;
+                  ctx.strokeStyle = isInTraversal ? 'red' : 'white';
                   ctx.stroke();
 
                   // Word wrap logic
@@ -226,47 +341,75 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
 
                   // Draw each line of text
                   const lineHeight = fontSize * 1.2; // Adjust line height as needed
-                  const yOffset = -(lines.length - 1) * lineHeight / 2; // Center the text vertically
+                  const yOffset = -((lines.length - 1) * lineHeight) / 2; // Center the text vertically
                   lines.forEach((line, index) => {
                     ctx.fillStyle = 'white';
-                    ctx.fillText(line, node.x, node.y + yOffset + (index * lineHeight));
+                    ctx.fillText(line, node.x, node.y + yOffset + index * lineHeight);
                   });
                 }}
                 linkCanvasObjectMode={() => 'after'}
                 linkCanvasObject={(link, ctx, globalScale) => {
-                  const MAX_FONT_SIZE = 8;
-                  const LABEL_NODE_MARGIN = 5;
                   const start = link.source;
                   const end = link.target;
 
                   if (typeof start !== 'object' || typeof end !== 'object') return;
 
-                  // Calculate the midpoint for the label
-                  const textPos = Object.assign(
-                    {},
-                    ...['x', 'y'].map((c) => ({
-                      [c]: (start[c] + end[c]) / 2, // Calc mid point
-                    }))
-                  );
+                  // Determine if the link is part of any active traversal
+                  let linkColor = 'rgba(170, 170, 170, 0.5)'; // Default link color
+                  let isInTraversal = false;
 
-                  // Calculate angle for text rotation
+                  if (activeTraversals.length > 0) {
+                    const traversal = activeTraversals[0];
+
+                    const sourceIndex = traversal.path.indexOf(start.id);
+                    const targetIndex = traversal.path.indexOf(end.id);
+                    if (
+                      sourceIndex >= 0 &&
+                      targetIndex >= 0 &&
+                      sourceIndex < traversal.progress &&
+                      targetIndex < traversal.progress &&
+                      Math.abs(sourceIndex - targetIndex) === 1
+                    ) {
+                      isInTraversal = true;
+                    }
+                  }
+
+                  // Draw the link line
+                  ctx.strokeStyle = isInTraversal ? 'red' : linkColor;
+                  ctx.lineWidth = isInTraversal ? 2 : 1.5;
+                  ctx.beginPath();
+                  ctx.moveTo(start.x, start.y);
+                  ctx.lineTo(end.x, end.y);
+                  ctx.stroke();
+
+                  // Label drawing code (same as before)
+                  const textPos = {
+                    x: (start.x + end.x) / 2,
+                    y: (start.y + end.y) / 2,
+                  };
+
                   const relLink = { x: end.x - start.x, y: end.y - start.y };
-                  const angle = Math.atan2(relLink.y, relLink.x);
+
+                  let textAngle = Math.atan2(relLink.y, relLink.x);
+                  // Maintain label horizontal orientation for better readability
+                  if (textAngle > Math.PI / 2) textAngle = -(Math.PI - textAngle);
+                  if (textAngle < -Math.PI / 2) textAngle = -(-Math.PI - textAngle);
 
                   ctx.save();
                   ctx.translate(textPos.x, textPos.y);
-                  ctx.rotate(angle);
+                  ctx.rotate(textAngle);
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
 
-                  // Adjust position slightly
-                  const fontSize = Math.min(MAX_FONT_SIZE, 12 / globalScale);
+                  const fontSize = Math.min(4, 8 / globalScale);
                   ctx.font = `${fontSize}px Sans-Serif`;
                   ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
 
-                  // Draw background rectangle for label
-                  const textWidth = ctx.measureText(link.type).width;
+                  const text = link.type;
+                  const textWidth = ctx.measureText(text).width;
                   const padding = 2;
+
+                  // Draw background rectangle for label
                   ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
                   ctx.fillRect(
                     -textWidth / 2 - padding,
@@ -277,7 +420,7 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
 
                   // Draw text
                   ctx.fillStyle = 'black';
-                  ctx.fillText(link.type, 0, 0);
+                  ctx.fillText(text, 0, 0);
                   ctx.restore();
                 }}
                 onNodeClick={(node) => {

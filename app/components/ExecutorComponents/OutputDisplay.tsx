@@ -225,55 +225,59 @@ export function OutputDisplay({ events, pathData, traversalPath }: OutputDisplay
 
     // Start from a random node
     const startNode = nodes[Math.floor(Math.random() * nodes.length)];
-    const visited = new Set<string>();
+    const visitedNodes = new Set<string>();
+    const visitedLinks = new Set<string>();
     const path: string[] = [];
 
     let currentNode = startNode;
+    visitedNodes.add(currentNode.id);
+    path.push(currentNode.id);
 
-    // Generate random path length between 3 and 8
-    let steps = 12; // Random number between 3 and 8
+    // Set the number of steps to take
+    let steps = 12; // Adjust as needed
 
     while (currentNode && steps > 0) {
-      path.push(currentNode.id);
-      visited.add(currentNode.id);
-
-      console.log("VISITED:", visited)
-
-      // Get all outgoing links from current node
+      // Get all outgoing links from current node that lead to unvisited nodes
       const outgoingLinks = links.filter((link) => {
         const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
         const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+        const otherNodeId = currentNode.id === sourceId ? targetId : sourceId;
         return (
-          (sourceId === currentNode.id && !visited.has(targetId)) ||
-          (targetId === currentNode.id && !visited.has(sourceId))
+          (sourceId === currentNode.id || targetId === currentNode.id) &&
+          !visitedNodes.has(otherNodeId) &&
+          !visitedLinks.has(link.id)
         );
       });
 
-      console.log("CURRENT NODE:", currentNode);
-      console.log("LINKS:", links);
-      console.log("OUTGOING LINKS:", outgoingLinks);
       if (outgoingLinks.length === 0) break;
 
       // Randomly select one of the outgoing links
       const randomLink = outgoingLinks[Math.floor(Math.random() * outgoingLinks.length)];
+
+      // Add the link's id to the path
+      path.push(randomLink.id);
+      visitedLinks.add(randomLink.id);
+
       const sourceId = typeof randomLink.source === 'object' ? randomLink.source.id : randomLink.source;
       const targetId = typeof randomLink.target === 'object' ? randomLink.target.id : randomLink.target;
+      
+      // Determine the next node
+      const nextNodeId = currentNode.id === sourceId ? targetId : sourceId;
 
-      // If current node is the source, go to target; if it's the target, go to source
-      currentNode = nodes.find((node) => 
-        node.id === (currentNode.id === sourceId ? targetId : sourceId)
-      );
+      // Move to next node
+      currentNode = nodes.find((node) => node.id === nextNodeId);
+
+      if (!currentNode) break; // Safety check
+
+      // Add next node's id to the path
+      path.push(currentNode.id);
+      visitedNodes.add(currentNode.id);
+
       steps--;
-
-    //   if (path.length < 3) {
-    //     console.log('Generated path is too short, retrying...');
-    //     return generateRandomTraversal();
-    //   }
-  
     }
 
-    // Assign a random color to this traversal
-    const color = 'red'; // Use red color for traversal path
+    // Assign a color to this traversal
+    const color = 'red';
 
     // Log the generated traversal path
     console.log('Generated Traversal Path:', path);
@@ -287,22 +291,17 @@ export function OutputDisplay({ events, pathData, traversalPath }: OutputDisplay
 
     const interval = setInterval(() => {
       setActiveTraversals((prevTraversals) =>
-        prevTraversals
-          .map((traversal) => {
-            if (traversal.progress < traversal.path.length) {
-              const updatedTraversal = {
-                ...traversal,
-                progress: traversal.progress + 1,
-              };
-              console.log('Traversal Progress:', updatedTraversal);
-              return updatedTraversal;
-            } else {
-              return traversal;
-            }
-          })
-          .filter((traversal) => traversal.progress < traversal.path.length)
+        prevTraversals.map((traversal) => {
+          if (traversal.progress < traversal.path.length) {
+            // Continue incrementing progress
+            return { ...traversal, progress: traversal.progress + 1 };
+          } else {
+            // Traversal is complete, keep it in state
+            return traversal;
+          }
+        })
       );
-    }, 500); // Adjust interval as desired
+    }, 100);
 
     return () => clearInterval(interval);
   }, [activeTraversals]);
@@ -369,8 +368,13 @@ export function OutputDisplay({ events, pathData, traversalPath }: OutputDisplay
                       .filter(({ id, idx }) => id === node.id && idx % 2 === 0)
                       .map(({ idx }) => idx);
 
-                    if (nodeIndices.some((index) => index <= traversal.progress)) {
-                      isInTraversal = true;
+                      if (traversal.progress >= traversal.path.length) {
+                        // Traversal complete: highlight all nodes
+                        isInTraversal = nodeIndices.length > 0;
+                      } else {
+                        if (nodeIndices.some((index) => index <= traversal.progress)) {
+                          isInTraversal = true;
+                        }
                     }
                   }
 
@@ -431,8 +435,14 @@ export function OutputDisplay({ events, pathData, traversalPath }: OutputDisplay
                       .filter(({ id, idx }) => id === link.id && idx % 2 === 1)
                       .map(({ idx }) => idx);
 
-                    if (linkIndices.some((index) => index <= traversal.progress)) {
-                      isInTraversal = true;
+                    if (traversal.progress >= traversal.path.length) {
+                      // Traversal complete: highlight all links in the path
+                      isInTraversal = linkIndices.length > 0;
+                    } else {
+                      // Highlight links up to current progress
+                      if (linkIndices.some((index) => index <= traversal.progress)) {
+                        isInTraversal = true;
+                      }
                     }
                   }
 

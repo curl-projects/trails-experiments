@@ -3,11 +3,13 @@ import { ClientOnly } from 'remix-utils/client-only';
 import styles from './OutputDisplay.module.css';
 import { Event } from '~/types/FeedTypes';
 import type { ForceGraphMethods } from 'react-force-graph-2d';
+// import * as d3 from 'd3-force';
 
 interface NodeData {
   id: string;
   name: string;
   labels: string[];
+  color?: string;
   [key: string]: any;
 }
 
@@ -48,6 +50,10 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
   };
 
   useEffect(() => {
+    console.log("Graph Data:", graphData)
+  }, [graphData])
+
+  useEffect(() => {
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
     return () => {
@@ -60,17 +66,39 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
       if (event.event_type === 'data' && event.data_type === 'graph') {
         const data = event.data as { nodes: NodeData[]; edges: LinkData[] };
 
+        // Define a custom color array
+        const colors = [
+          '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
+          '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'
+                  ];
+        let colorIndex = 0;  
+        // Create a color mapping based on labels
+        const labelColors: { [label: string]: string } = {};
+
+        // Assign colors to labels
+        data.nodes.forEach((node) => {
+          const label = node.labels[0]; // Assuming at least one label exists
+          if (label && !labelColors[label]) {
+            labelColors[label] = colors[colorIndex % colors.length];
+            colorIndex++;
+          }
+        });
+
         // Format nodes
-        const formattedNodes = data.nodes.map((node) => ({
-          id: String(node.id),
-          name:
-            node.properties.username ||
-            node.properties.title ||
-            node.properties.name ||
-            `Node ${node.id}`,
-          labels: node.labels,
-          ...node.properties,
-        }));
+        const formattedNodes = data.nodes.map((node) => {
+          const label = node.labels[0]; // Assuming at least one label exists
+          return {
+            id: String(node.id),
+            name:
+              node.properties.username ||
+              node.properties.title ||
+              node.properties.name ||
+              `Node ${node.id}`,
+            labels: node.labels,
+            color: labelColors[label] || '#cccccc', // Assign color based on label
+            ...node.properties,
+          };
+        });
 
         // Format links
         const formattedLinks = data.edges.map((edge) => ({
@@ -93,6 +121,13 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
     if (fgRef.current) {
       // Disable the default centering force
       fgRef.current.d3Force('center', null);
+
+      // Increase the repulsive force to spread nodes out more
+      fgRef.current.d3Force('charge')?.strength(-200); // Increase the negative value for more repulsion
+
+      // Adjust the link distance
+      fgRef.current.d3Force('link')?.distance(150); // Increase link distance
+
       setTimeout(() => {
         fgRef.current.zoomToFit(500, 50); // Duration: 500ms, Padding: 50px
       }, 500);
@@ -115,7 +150,7 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
                 ref={fgRef}
                 graphData={graphData}
                 nodeLabel={(node) => {
-                  // Construct tooltip content with labels and metadata
+                  // Construct HTML content for tooltip
                   let label = `<div><strong>${node.name}</strong><br/>Labels: ${node.labels.join(
                     ', '
                   )}<br/>`;
@@ -139,15 +174,14 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
                   label += '</div>';
                   return label;
                 }}
-                nodeAutoColorBy="labels[0]"
                 width={dimensions.width}
                 height={dimensions.height}
-                nodeRelSize={10} // Increase node size
-                linkWidth={2} // Increase link width
+                nodeRelSize={6} // Adjust node size as needed
+                linkWidth={1.5} // Adjust link width as needed
                 nodeCanvasObjectMode={() => 'replace'}
                 nodeCanvasObject={(node, ctx, globalScale) => {
                   const label = node.name;
-                  const fontSize = 10 / globalScale;
+                  const fontSize = Math.max(8, 12 / globalScale);
                   ctx.font = `${fontSize}px Sans-Serif`;
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
@@ -159,14 +193,19 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
                   ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false);
                   ctx.fill();
 
+                  // Optionally draw node border
+                  ctx.lineWidth = 1;
+                  ctx.strokeStyle = 'white';
+                  ctx.stroke();
+
                   // Draw node label
                   ctx.fillStyle = 'white';
                   ctx.fillText(label, node.x, node.y);
                 }}
                 linkCanvasObjectMode={() => 'after'}
                 linkCanvasObject={(link, ctx, globalScale) => {
-                  const MAX_FONT_SIZE = 6;
-                  const LABEL_NODE_MARGIN = 10;
+                  const MAX_FONT_SIZE = 8;
+                  const LABEL_NODE_MARGIN = 5;
                   const start = link.source;
                   const end = link.target;
 
@@ -176,43 +215,58 @@ export function OutputDisplay({ events }: OutputDisplayProps) {
                   const textPos = Object.assign(
                     {},
                     ...['x', 'y'].map((c) => ({
-                      [c]: start[c] + (end[c] - start[c]) / 2, // Calc mid point
+                      [c]: (start[c] + end[c]) / 2, // Calc mid point
                     }))
                   );
 
-                  // Rotate text to align with link
+                  // Calculate angle for text rotation
                   const relLink = { x: end.x - start.x, y: end.y - start.y };
-                  const norm = Math.sqrt(relLink.x * relLink.x + relLink.y * relLink.y);
-                  if (norm === 0) return;
-
                   const angle = Math.atan2(relLink.y, relLink.x);
-
-                  // Prevent upside-down text
-                  const rotation =
-                    angle > Math.PI / 2 || angle < -Math.PI / 2 ? angle + Math.PI : angle;
-
-                  const fontSize = Math.min(MAX_FONT_SIZE, 8 / globalScale);
-                  ctx.font = `${fontSize}px Sans-Serif`;
-                  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
 
                   ctx.save();
                   ctx.translate(textPos.x, textPos.y);
-                  ctx.rotate(rotation);
+                  ctx.rotate(angle);
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
-                  ctx.fillText(link.type, 0, -LABEL_NODE_MARGIN);
+
+                  // Adjust position slightly
+                  const fontSize = Math.min(MAX_FONT_SIZE, 12 / globalScale);
+                  ctx.font = `${fontSize}px Sans-Serif`;
+                  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+
+                  // Draw background rectangle for label
+                  const textWidth = ctx.measureText(link.type).width;
+                  const padding = 2;
+                  ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                  ctx.fillRect(
+                    -textWidth / 2 - padding,
+                    -fontSize / 2 - padding,
+                    textWidth + padding * 2,
+                    fontSize + padding * 2
+                  );
+
+                  // Draw text
+                  ctx.fillStyle = 'black';
+                  ctx.fillText(link.type, 0, 0);
                   ctx.restore();
                 }}
                 onNodeClick={(node) => {
                   // Zoom in and center the clicked node
-                  fgRef.current?.centerAt(node.x, node.y, 1000); // 1000ms animation
-                  fgRef.current?.zoom(4, 1000); // Zoom level 4
+                  fgRef.current?.centerAt(node.x, node.y, 500); // 500ms animation
+                  fgRef.current?.zoom(2, 500); // Zoom level 2
                 }}
                 onNodeHover={(node) => {
                   // Optionally change cursor style on hover
-                  const canvas = fgRef.current?.canvas; // Corrected access to canvas element
+                  const canvas = fgRef.current?.canvas as HTMLCanvasElement;
                   if (canvas) {
                     canvas.style.cursor = node ? 'pointer' : '';
+                  }
+                }}
+                onLinkHover={(link) => {
+                  // Optionally change cursor style on hover over links
+                  const canvas = fgRef.current?.canvas as HTMLCanvasElement;
+                  if (canvas) {
+                    canvas.style.cursor = link ? 'pointer' : '';
                   }
                 }}
               />

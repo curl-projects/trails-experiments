@@ -19,6 +19,7 @@
     "@remix-run/serve": "^2.15.0",
     "@types/node": "^22.10.1",
     "cytoscape": "^3.30.4",
+    "d3-force": "^3.0.0",
     "dotenv": "^16.4.5",
     "graphology": "^0.25.4",
     "graphology-layout-force": "^0.2.4",

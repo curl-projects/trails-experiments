@@ -21,6 +21,35 @@ export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch, onR
   const [isMinimized, setIsMinimized] = useState(false);
   const [activePanel, setActivePanel] = useState<PanelType>('search');
 
+  // Calculate counts
+  const protocolCount = events
+    .filter(event => event.event_type === 'data' && event.data_type === 'protocols')
+    .flatMap(event => event.data).length;
+
+  const compositionCount = events
+    .filter(event => 
+      (event.event_type === 'add' || event.event_type === 'update') && 
+      'ranked_output' in event
+    )
+    .flatMap(event => event.ranked_output.output.parameterized_compositions)
+    .filter((composition, index, self) => 
+      index === self.findIndex(c => c.id === composition.id)
+    ).length;
+
+  const failedPathCount = events
+    .filter(event => 
+      event.event_type === 'data' && 
+      event.data_type === 'debug_record'
+    ).length;
+
+  // Calculate graph node count
+  const graphNodeCount = events
+    .filter(event => event.event_type === 'data' && event.data_type === 'graph')
+    .reduce((count, event) => {
+      const graphData = event.data as { nodes: any[] };
+      return graphData.nodes.length;
+    }, 0);
+
   return (
     <div className={styles['feed-controls']}>
       <div className={styles.header}>
@@ -57,12 +86,14 @@ export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch, onR
               onClick={() => setActivePanel('protocols')}
             >
               <FaCode /> Protocols
+              <span className={styles.badge}>{protocolCount}</span>
             </button>
             <button
               className={`${styles.panelTab} ${activePanel === 'compositions' ? styles.active : ''}`}
               onClick={() => setActivePanel('compositions')}
             >
               <FaProjectDiagram /> Compositions
+              <span className={styles.badge}>{compositionCount}</span>
             </button>
             <button
               className={`${styles.panelTab} ${activePanel === 'distributions' ? styles.active : ''}`}
@@ -75,12 +106,14 @@ export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch, onR
               onClick={() => setActivePanel('graph')}
             >
               <FaProjectDiagram /> Graph
+              <span className={styles.badge}>{graphNodeCount}</span>
             </button>
             <button
               className={`${styles.panelTab} ${activePanel === 'failed-paths' ? styles.active : ''}`}
               onClick={() => setActivePanel('failed-paths')}
             >
               <FaExclamationTriangle /> Failed Paths
+              <span className={styles.badge}>{failedPathCount}</span>
             </button>
           </div>
           

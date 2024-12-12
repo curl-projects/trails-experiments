@@ -3,6 +3,7 @@ import { ClientOnly } from 'remix-utils/client-only';
 import styles from './GraphPanel.module.css';
 import type { ForceGraphMethods } from 'react-force-graph-2d';
 import { Event } from '~/types/FeedTypes';
+import { usePathHighlight } from '~/context/PathHighlightContext';
 
 interface NodeData {
   id: string;
@@ -27,6 +28,7 @@ interface GraphPanelProps {
 const ForceGraph2D = React.lazy(() => import('./ForceGraph2DWrapper'));
 
 export const GraphPanel: React.FC<GraphPanelProps> = ({ events }) => {
+  const { highlightedPath, pinnedPaths } = usePathHighlight();
   const [graphData, setGraphData] = useState<{ nodes: NodeData[]; links: LinkData[] }>({
     nodes: [],
     links: [],
@@ -41,6 +43,49 @@ export const GraphPanel: React.FC<GraphPanelProps> = ({ events }) => {
   const [activeTraversals, setActiveTraversals] = useState<
     { path: string[]; progress: number; color: string }[]
   >([]);
+
+  useEffect(() => {
+    console.log('highlightedPath', highlightedPath);
+  }, [highlightedPath]);
+
+  // Convert paths to traversals
+  useEffect(() => {
+    const traversals: { path: string[]; progress: number; color: string }[] = [];
+
+    // Add pinned paths
+    pinnedPaths.forEach(path => {
+      const traversalPath: string[] = [];
+      path.nodes.forEach((node, index) => {
+        traversalPath.push(node.properties.id);
+        if (index < path.relationships.length) {
+          traversalPath.push(path.relationships[index].properties.id);
+        }
+      });
+      traversals.push({
+        path: traversalPath,
+        progress: traversalPath.length - 1,
+        color: '#2563eb' // blue for pinned paths
+      });
+    });
+
+    // Add highlighted path if it exists
+    if (highlightedPath) {
+      const traversalPath: string[] = [];
+      highlightedPath.nodes.forEach((node, index) => {
+        traversalPath.push(node.properties.id);
+        if (index < highlightedPath.relationships.length) {
+          traversalPath.push(highlightedPath.relationships[index].properties.id);
+        }
+      });
+      traversals.push({
+        path: traversalPath,
+        progress: traversalPath.length - 1,
+        color: 'red' // red for highlighted path
+      });
+    }
+
+    setActiveTraversals(traversals);
+  }, [highlightedPath, pinnedPaths]);
 
   // Function to update dimensions
   const updateDimensions = () => {

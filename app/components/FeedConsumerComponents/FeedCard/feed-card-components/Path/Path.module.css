@@ -61,3 +61,55 @@
   .arrow {
     font-size: 1.2rem;
   }
+
+  .pathContainer {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .pinButton {
+    position: absolute;
+    right: -8px;
+    top: -8px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 6px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .pathContainer:hover .pinButton {
+    opacity: 1;
+  }
+
+  .pinButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .pinIcon {
+    font-size: 12px;
+    color: #6b7280;
+    transition: transform 0.2s ease;
+  }
+
+  .pinButton.pinned {
+    opacity: 1;
+    background-color: #2563eb;
+  }
+
+  .pinButton.pinned .pinIcon {
+    color: white;
+    transform: rotate(45deg);
+  }

@@ -1,50 +1,110 @@
 .feedConsumerContainer {
   display: flex;
-  flex-direction: column;
-  height: 95vh;
-  user-select: none; /* Prevent text selection while dragging */
+  height: 90vh;
 }
 
 .mainContent {
   display: flex;
   flex: 1;
-  overflow: hidden;
-  position: relative;
 }
 
 .feedLog {
-  padding: 16px;
-  overflow-y: hidden;
-  border-right: none;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  min-width: 0; /* Allow shrinking */
+  border-right: 1px solid #ccc;
+  overflow: hidden;
+  height: 100%;
+  gap: 8px;
+  padding: 8px;
+}
+
+.feedControlsContainer {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.feedControlsContainer > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.feedLogContainer {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.feedLogContainer > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.verticalDivider {
+  height: 8px;
+  background-color: transparent;
+  cursor: row-resize;
+  transition: background-color 0.2s;
+  margin: 0;
+  z-index: 10;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.verticalDivider::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background-color: #e5e7eb;
+  transform: translateY(-50%);
+}
+
+.verticalDivider:hover::after {
+  background-color: #2563eb;
+}
+
+.horizontalDivider {
+  width: 4px;
+  background-color: transparent;
+  cursor: col-resize;
+  transition: background-color 0.2s;
+  margin: 0 -2px;
+  z-index: 10;
+}
+
+.horizontalDivider:hover {
+  background-color: #e5e7eb;
 }
 
 .content {
-  flex: 1;
-  padding: 16px;
+  flex: 2;
   overflow-y: auto;
-  min-width: 0; /* Allow shrinking */
+  padding: 20px;
 }
 
-.divider {
-  width: 4px;
-  background-color: #e0e0e0;
+/* Add these styles when dragging */
+.feedConsumerContainer.dragging {
   cursor: col-resize;
-  transition: background-color 0.2s;
-  flex-shrink: 0;
+  user-select: none;
 }
 
-.divider:hover,
-.divider:active {
-  background-color: #2196f3;
-}
-
-.feedControls {
-  flex: 50%;
-  min-height: 0;
-  overflow-y: auto;
-  margin-bottom: 16px;
+.feedConsumerContainer.dragging * {
+  pointer-events: none;
 } 

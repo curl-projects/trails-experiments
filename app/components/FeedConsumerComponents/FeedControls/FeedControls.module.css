@@ -55,8 +55,8 @@
   .panelTab {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
+    gap: 4px;
+    padding: 8px 12px;
     border: none;
     background: none;
     color: #6c757d;
@@ -100,4 +100,25 @@
   .resetButton:hover {
     background-color: #fee2e2;
     color: #dc2626;
+  }
+  
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    margin-left: 4px;
+    background-color: #e5e7eb;
+    color: #4b5563;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  
+  .panelTab.active .badge {
+    background-color: #2563eb;
+    color: white;
   }

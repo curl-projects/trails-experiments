@@ -11,9 +11,7 @@ interface FeedContainerProps {
 export function FeedContainer({ events }: FeedContainerProps) {
   return (
     <div className={styles.feedContainer}>
-      <div className={styles.feedContentContainer}>
         <Feed events={events} />
-      </div>
     </div>
   );
 }

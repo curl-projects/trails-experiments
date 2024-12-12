@@ -1,20 +1,36 @@
-.feedLog {
+.feedLogContainer {
+  flex: 50%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.feedLogTitle {
+  font-size: 1.2em;
+  margin: 0;
+  padding: 10px;
+  background-color: #f8f9fa;
+  color: #333;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  user-select: none;
+}
+
+.eventList {
+  flex: 1;
   overflow-y: auto;
-  padding: 20px;
-  border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 10px;
 }
 
 .feedLog h3 {
   margin-top: 0;
   margin-bottom: 1rem;
-}
-
-.eventList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  transition: max-height 0.3s ease;
-  padding: 10px;
 }
 
 .eventBox {
@@ -150,28 +166,4 @@
   background: #ebf8ff;
   padding: 0.1rem 0.4rem;
   border-radius: 4px;
-}
-
-.feedLogContainer {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  width: 300px;
-  max-height: 80vh;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #1a1a1a;
-  padding: 0;
-  z-index: 1000;
-}
-
-.feedLogTitle {
-  font-size: 1.2em;
-  margin: 0;
-  padding: 10px;
-  background-color: #333;
-  color: #fff;
-  cursor: move;
-  user-select: none;
 }

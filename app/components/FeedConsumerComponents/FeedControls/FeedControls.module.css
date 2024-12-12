@@ -3,152 +3,13 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 16px;
-    width: 300px;
+    width: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-  }
-  
-  .feed-controls h3 {
-    margin: 0;
-    font-size: 1.2em;
-    color: #333;
-    margin-bottom: 16px;
-  }
-  
-  .inputGroup {
-    margin-bottom: 16px;
-  }
-  
-  .inputGroup label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .inputGroup input[type="text"],
-  .inputGroup input[type="number"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  .checkboxGroup {
-    margin-bottom: 16px;
-  }
-  
-  .checkboxGroup label {
+    overflow-y: auto;
+    max-height: 100%;
     display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #555;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  .strategiesGroup {
-    margin-bottom: 16px;
-    background-color: #f9f9f9;
-    padding: 12px;
-    border-radius: 6px;
-  }
-  
-  .strategiesGroup > label:first-child {
-    display: block;
-    margin-bottom: 12px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .strategyOption {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 4px;
-    padding: 8px;
-    cursor: pointer;
-    color: #333;
-    background-color: #ffffff;
-    border: 1px solid #e9ecef;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-  }
-  
-  .strategyOption:hover {
-    background-color: #f8f9fa;
-    border-color: #dee2e6;
-    transform: translateX(4px);
-  }
-  
-  .strategyOption input[type="checkbox"] {
-    margin: 0;
-    width: 16px;
-    height: 16px;
-  }
-  
-  .feed-controls button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 1em;
-    margin-top: 8px;
-  }
-  
-  .feed-controls button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Style for disabled inputs */
-  .inputGroup input:disabled {
-    background-color: #e9ecef;
-    cursor: not-allowed;
-  }
-  
-  /* Style for validation errors */
-  .inputGroup input:invalid {
-    border-color: #dc3545;
-  }
-  
-  .advancedToggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px;
-    margin-bottom: 8px;
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 4px;
-    cursor: pointer;
-    color: #495057;
-    font-weight: bold;
-    transition: all 0.2s ease;
-  }
-  
-  .advancedToggle:hover {
-    background-color: #e9ecef;
-  }
-  
-  .advancedOptions {
-    padding: 8px;
-    margin-bottom: 16px;
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 4px;
-  }
-  
-  .advancedOptions .inputGroup:last-child,
-  .advancedOptions .checkboxGroup:last-child {
-    margin-bottom: 0;
-  }
+    flex-direction: column;
+}
   
   .header {
     display: flex;
@@ -180,4 +41,61 @@
   .minimizeButton:hover {
     background-color: #e9ecef;
     color: #333;
+  }
+  
+  .panelTabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 8px;
+  }
+  
+  .panelTab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    color: #6c757d;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  
+  .panelTab:hover {
+    background-color: #f8f9fa;
+    color: #495057;
+  }
+  
+  .panelTab.active {
+    background-color: #e9ecef;
+    color: #212529;
+  }
+  
+  .headerControls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .resetButton {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .resetButton:hover {
+    background-color: #fee2e2;
+    color: #dc2626;
   }

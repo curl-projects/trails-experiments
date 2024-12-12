@@ -1,6 +1,6 @@
 // app/routes/feed-consumer.tsx
 import React, { useEffect, useState, useRef } from 'react';
-import { ConnectionEvent, Event, TriggerEvent, ErrorEvent } from '~/types/FeedTypes';
+import { ConnectionEvent, Event, TriggerEvent, ErrorEvent, DataEvent } from '~/types/FeedTypes';
 import { FeedControls } from '~/components/FeedConsumerComponents/FeedControls/FeedControls';
 import { useEventContext } from '~/context/FeedEventContext';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,7 +12,6 @@ export default function FeedConsumer() {
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    
     ws.current = new WebSocket('ws://127.0.0.1:6789');
 
     ws.current.onopen = () => {
@@ -24,32 +23,54 @@ export default function FeedConsumer() {
         timestamp: new Date().toISOString(),
       };
       setEvents((prevEvents) => [...prevEvents, connectionEvent]);
+
+      // Request initial graph data
+      if (ws.current?.readyState === WebSocket.OPEN) {
+        const graphMessage = {
+          type: 'get_graph',
+          data: {
+            request_id: uuidv4()
+          }
+        };
+        console.log('Sending graph message:', graphMessage);
+        ws.current.send(JSON.stringify(graphMessage));
+      }
     };
 
     ws.current.onmessage = (event) => {
       try {
         const data: Event = JSON.parse(event.data);
         console.log('New event received:', data);
+        
+        if (data.event_type === 'data' && data.data_type === 'graph') {
+          console.log('Received graph:', data.data);
+          const dataEvent: DataEvent = {
+            id: uuidv4(),
+            event_type: 'data',
+            data_type: 'graph',
+            data: data.data,
+          };
+          setEvents((prevEvents) => [...prevEvents, dataEvent]);
+          return;
+        }
+
         const parsedEvent = eventSchema.safeParse(data);
         if(!parsedEvent.success) {
           console.log('Invalid event:', data);
           console.error('Invalid event:', parsedEvent.error);
 
           const errorEvent: ErrorEvent = {
-            id: uuidv4(), // Generate a unique ID for the error event
+            id: uuidv4(),
             event_type: 'error',
             message: 'Failed to parse event',
-            traceback: JSON.stringify(parsedEvent.error.issues, null, 2), // Format error details with indentation 
+            traceback: JSON.stringify(parsedEvent.error.issues, null, 2),
           };
     
-          // Push the error event to the log
           setEvents((prevEvents) => [...prevEvents, errorEvent]);
-    
           return;
         }
 
         const validEvent: Event = parsedEvent.data as Event;
-        
         setEvents((prevEvents) => [...prevEvents, validEvent]);
 
       } catch (error) {
@@ -70,7 +91,6 @@ export default function FeedConsumer() {
         timestamp: new Date().toISOString(),
       };
       setEvents((prevEvents) => [...prevEvents, disconnectionEvent]);
-
     };
 
     return () => {
@@ -104,8 +124,7 @@ export default function FeedConsumer() {
 
   return (
     <div>
-      <FeedControls onTriggerSearch={handleTriggerSearch} />
-      <FeedConsumerLayout events={events} />
+      <FeedConsumerLayout events={events} onTriggerSearch={handleTriggerSearch} />
     </div>
   );
 }

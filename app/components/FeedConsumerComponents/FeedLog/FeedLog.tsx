@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Draggable from 'react-draggable';
 import { Event, NodeEvent, ErrorEvent, ConnectionEvent, TriggerEvent, ValidationEvent, DataEvent } from '~/types/FeedTypes';
 import { Node } from '~/types/GraphTypes';
 import { FaPlus, FaPencilAlt, FaExclamationCircle, FaPlug, FaBolt, FaUnlink, FaCheckCircle, FaDatabase } from 'react-icons/fa';
@@ -234,28 +233,26 @@ const DataEventComponent = ({
 );
 
 export function FeedLog({ events }: FeedLogProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
 
   return (
-    <Draggable handle={`.${styles.feedLogTitle}`}>
-      <div className={styles.feedLogContainer}>
-        <h3 className={styles.feedLogTitle} onClick={toggleExpand}>
-          Feed Event Log
-        </h3>
-        {isExpanded && (
-          <div className={styles.eventList}>
-            {events.map((event, index) => (
-              <div key={index} className={styles.eventWrapper}>
-                <ExpandableEvent event={event} />
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </Draggable>
+    <div className={styles.feedLogContainer}>
+      <h3 className={styles.feedLogTitle} onClick={toggleExpand}>
+        Feed Event Log
+      </h3>
+      {isExpanded && (
+        <div className={styles.eventList}>
+          {events.map((event, index) => (
+            <div key={index} className={styles.eventWrapper}>
+              <ExpandableEvent event={event} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

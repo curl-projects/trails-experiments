@@ -1,0 +1,43 @@
+.panel {
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.subPanelTabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+.subPanelTab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  color: #6c757d;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.subPanelTab:hover {
+  background-color: #f8f9fa;
+  color: #495057;
+}
+
+.subPanelTab.active {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.subPanelContent {
+  padding: 0 8px;
+  height: 60vh;
+  overflow-y: auto;
+} 

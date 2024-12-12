@@ -1,13 +1,8 @@
 .feedContainer {
     display: flex;
-    height: 100vh;
-  }
-  
-  .feedLogContainer {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
+    height: 90vh;
     border-right: 1px solid #ccc;
+    overflow-y: auto;
   }
   
   .feedContentContainer {

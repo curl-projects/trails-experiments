@@ -1,22 +1,50 @@
 .feedConsumerContainer {
   display: flex;
   flex-direction: column;
+  height: 95vh;
+  user-select: none; /* Prevent text selection while dragging */
 }
 
 .mainContent {
   display: flex;
   flex: 1;
+  overflow: hidden;
+  position: relative;
 }
 
 .feedLog {
-  flex: 1; /* Left third */
-  padding: 10px;
-  overflow-y: auto;
-  border-right: 1px solid #ccc; /* Separator line on the right */
-  /* background-color: #f9f9f9; Optional background color */
+  padding: 16px;
+  overflow-y: hidden;
+  border-right: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0; /* Allow shrinking */
 }
 
 .content {
-  flex: 2; /* Right two-thirds */
-  padding: 10px;
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  min-width: 0; /* Allow shrinking */
+}
+
+.divider {
+  width: 4px;
+  background-color: #e0e0e0;
+  cursor: col-resize;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.divider:hover,
+.divider:active {
+  background-color: #2196f3;
+}
+
+.feedControls {
+  flex: 50%;
+  min-height: 0;
+  overflow-y: auto;
+  margin-bottom: 16px;
 } 

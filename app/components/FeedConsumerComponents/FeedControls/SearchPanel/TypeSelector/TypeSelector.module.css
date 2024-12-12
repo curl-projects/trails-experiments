@@ -1,0 +1,57 @@
+.typeSelector {
+  margin-bottom: 16px;
+}
+
+.typeSelector label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+.selectorContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  color: #333;
+}
+
+.selectedTypes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.typeTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: #495057;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.removeButton:hover {
+  color: #dc3545;
+} 

@@ -1,0 +1,47 @@
+.row {
+  display: flex;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  background: white;
+}
+
+.info {
+  flex: 1;
+  margin-right: 16px;
+}
+
+.info h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #1f2937;
+}
+
+.info p {
+  margin: 4px 0 8px;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.stats {
+  display: flex;
+  gap: 12px;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.stats span {
+  padding: 2px 8px;
+  background: #f3f4f6;
+  border-radius: 4px;
+}
+
+.graph {
+  width: 200px;
+  height: 100px;
+  flex-shrink: 0;
+  background: #f9fafb;
+  border-radius: 4px;
+  padding: 8px;
+} 

@@ -10,7 +10,11 @@ interface CompositionsPanelProps {
 export const CompositionsPanel: React.FC<CompositionsPanelProps> = ({ events }) => {
   // Extract unique compositions from events
   const compositions = events
-    .filter(event => event.event_type === 'add' && event.ranked_output)
+    .filter(event => 
+      (event.event_type === 'add' || event.event_type === 'update') && 
+      'ranked_output' in event && 
+      event.ranked_output
+    )
     .flatMap(event => event.ranked_output.output.parameterized_compositions)
     .filter((composition, index, self) => 
       index === self.findIndex(c => c.id === composition.id)
@@ -18,14 +22,20 @@ export const CompositionsPanel: React.FC<CompositionsPanelProps> = ({ events }) 
 
   return (
     <div className={styles.panel}>
-      <div className={styles.compositionsList}>
-        {compositions.map((composition) => (
-          <CompositionCard 
-            key={composition.id}
-            composition={composition}
-          />
-        ))}
-      </div>
+      {compositions.length > 0 ? (
+        <div className={styles.compositionsList}>
+          {compositions.map((composition) => (
+            <CompositionCard 
+              key={composition.id}
+              composition={composition}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className={styles.emptyState}>
+          No compositions available. Run a search to see compositions appear here.
+        </div>
+      )}
     </div>
   );
 }; 

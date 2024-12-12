@@ -54,6 +54,29 @@ export default function FeedConsumer() {
           return;
         }
 
+        if (data.event_type === 'data' && data.data_type === 'debug_record') {
+          console.warn('Received debug record:', data.data);
+          
+          // Create a data event from the debug record
+          const debugEvent: DataEvent = {
+            id: uuidv4(),
+            event_type: 'data',
+            data_type: 'debug_record',
+            data: data.data.path_segments || {},
+            message: `Failed path in composition: ${data.data.composition_description || 'Unknown composition'}`,
+            timestamp: new Date().toISOString(),
+            details: {
+              composition_id: data.data.composition_id,
+              input_node_id: data.data.input_node_id,
+              input_type: data.data.input_type,
+              path_segments: data.data.path_segments
+            }
+          };
+
+          setEvents((prevEvents) => [...prevEvents, debugEvent]);
+          return;
+        }
+
         const parsedEvent = eventSchema.safeParse(data);
         if(!parsedEvent.success) {
           console.log('Invalid event:', data);

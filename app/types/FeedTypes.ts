@@ -126,6 +126,14 @@ export interface DataEvent {
   event_type: 'data';
   data: any;
   data_type: string;
+  message?: string;
+  timestamp?: string;
+  details?: {
+    composition_id?: string;
+    input_node_id?: string;
+    input_type?: string;
+    path_segments?: Record<string, any>;
+  };
 }
 
 export type Event = NodeEvent | ErrorEvent | ConnectionEvent | TriggerEvent | ValidationEvent | DataEvent;

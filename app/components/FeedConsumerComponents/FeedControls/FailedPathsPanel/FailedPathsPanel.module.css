@@ -4,7 +4,7 @@
   overflow-y: auto;
 }
 
-.compositionsList {
+.failedPathsList {
   display: flex;
   flex-direction: column;
   gap: 1rem;

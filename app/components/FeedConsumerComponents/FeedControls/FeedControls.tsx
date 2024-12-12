@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import styles from './FeedControls.module.css';
-import { FaMinus, FaPlus, FaSearch, FaChartBar, FaProjectDiagram, FaTrash, FaCode } from 'react-icons/fa';
+import { FaMinus, FaPlus, FaSearch, FaChartBar, FaProjectDiagram, FaTrash, FaCode, FaExclamationTriangle } from 'react-icons/fa';
 import { SearchPanel } from './SearchPanel/SearchPanel';
 import { DistributionsPanel } from './DistributionsPanel/DistributionsPanel';
 import { GraphPanel } from './GraphPanel/GraphPanel';
 import { ProtocolsPanel } from './ProtocolsPanel/ProtocolsPanel';
 import { CompositionsPanel } from './CompositionsPanel/CompositionsPanel';
 import { Event } from '~/types/FeedTypes';
+import { FailedPathsPanel } from './FailedPathsPanel/FailedPathsPanel';
 
 interface FeedControlsProps {
   onTriggerSearch: (searchParams: any) => void;
@@ -14,7 +15,7 @@ interface FeedControlsProps {
   events: Event[];
 }
 
-type PanelType = 'search' | 'protocols' | 'compositions' | 'distributions' | 'graph';
+type PanelType = 'search' | 'protocols' | 'compositions' | 'distributions' | 'graph' | 'failed-paths';
 
 export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch, onResetFeed, events }) => {
   const [isMinimized, setIsMinimized] = useState(false);
@@ -75,6 +76,12 @@ export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch, onR
             >
               <FaProjectDiagram /> Graph
             </button>
+            <button
+              className={`${styles.panelTab} ${activePanel === 'failed-paths' ? styles.active : ''}`}
+              onClick={() => setActivePanel('failed-paths')}
+            >
+              <FaExclamationTriangle /> Failed Paths
+            </button>
           </div>
           
           {activePanel === 'search' && <SearchPanel onTriggerSearch={onTriggerSearch} />}
@@ -82,6 +89,7 @@ export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch, onR
           {activePanel === 'compositions' && <CompositionsPanel events={events} />}
           {activePanel === 'distributions' && <DistributionsPanel />}
           {activePanel === 'graph' && <GraphPanel events={events} />}
+          {activePanel === 'failed-paths' && <FailedPathsPanel events={events} />}
         </>
       )}
     </div>

@@ -1,0 +1,71 @@
+.protocolCard {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.protocolCard:hover {
+  background: #f3f4f6;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+  margin-bottom: 0.75rem;
+}
+
+.types {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.type {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-family: monospace;
+}
+
+.nlDescriptionContainer {
+  margin-bottom: 0.5rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nlDescription {
+  font-size: 0.9rem;
+  color: #4b5563;
+  line-height: 1.4;
+}
+
+.arrow {
+  color: #6b7280;
+  font-weight: bold;
+}
+
+.codeBlock {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: #f3f4f6;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  overflow-x: auto;
+}
+
+.code {
+  margin: 0;
+  white-space: pre-wrap;
+  color: #2563eb;
+} 

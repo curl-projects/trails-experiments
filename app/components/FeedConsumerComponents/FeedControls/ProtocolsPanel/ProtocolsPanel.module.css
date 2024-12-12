@@ -1,0 +1,64 @@
+.panel {
+  padding: 8px 0;
+  height: 60vh;
+  overflow-y: auto;
+  background-color: #ffffff;
+}
+
+.protocolList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.protocolGroup {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.groupTitle {
+  margin: 0 0 16px 0;
+  font-size: 1rem;
+  color: #1f2937;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.protocol {
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.protocol:last-child {
+  margin-bottom: 0;
+}
+
+.protocol h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.9rem;
+  color: #111827;
+}
+
+.protocol p {
+  margin: 0 0 8px 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.metadata {
+  display: flex;
+  gap: 12px;
+  font-size: 0.75rem;
+}
+
+.metadata span {
+  background: #e5e7eb;
+  color: #4b5563;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+} 

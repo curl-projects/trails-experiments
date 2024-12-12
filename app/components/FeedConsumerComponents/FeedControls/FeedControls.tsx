@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styles from './FeedControls.module.css';
-import { FaMinus, FaPlus, FaSearch, FaChartBar, FaProjectDiagram, FaTrash } from 'react-icons/fa';
+import { FaMinus, FaPlus, FaSearch, FaChartBar, FaProjectDiagram, FaTrash, FaCode } from 'react-icons/fa';
 import { SearchPanel } from './SearchPanel/SearchPanel';
 import { DistributionsPanel } from './DistributionsPanel/DistributionsPanel';
 import { GraphPanel } from './GraphPanel/GraphPanel';
+import { ProtocolsPanel } from './ProtocolsPanel/ProtocolsPanel';
 import { Event } from '~/types/FeedTypes';
 
 interface FeedControlsProps {
@@ -12,7 +13,7 @@ interface FeedControlsProps {
   events: Event[];
 }
 
-type PanelType = 'search' | 'distributions' | 'graph';
+type PanelType = 'search' | 'distributions' | 'graph' | 'protocols';
 
 export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch, onResetFeed, events }) => {
   const [isMinimized, setIsMinimized] = useState(false);
@@ -50,6 +51,12 @@ export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch, onR
               <FaSearch /> Search
             </button>
             <button
+              className={`${styles.panelTab} ${activePanel === 'protocols' ? styles.active : ''}`}
+              onClick={() => setActivePanel('protocols')}
+            >
+              <FaCode /> Protocols
+            </button>
+            <button
               className={`${styles.panelTab} ${activePanel === 'distributions' ? styles.active : ''}`}
               onClick={() => setActivePanel('distributions')}
             >
@@ -64,6 +71,7 @@ export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch, onR
           </div>
           
           {activePanel === 'search' && <SearchPanel onTriggerSearch={onTriggerSearch} />}
+          {activePanel === 'protocols' && <ProtocolsPanel />}
           {activePanel === 'distributions' && <DistributionsPanel />}
           {activePanel === 'graph' && <GraphPanel events={events} />}
         </>

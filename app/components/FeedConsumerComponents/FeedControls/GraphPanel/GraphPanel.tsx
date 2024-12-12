@@ -125,10 +125,10 @@ export const GraphPanel: React.FC<GraphPanelProps> = ({ events }) => {
       fgRef.current.d3ReheatSimulation();
       fgRef.current.d3Force('charge')?.strength(-300);
       fgRef.current.d3Force('link')?.distance(75);
-    fgRef.current.d3ReheatSimulation();
+        fgRef.current.d3ReheatSimulation();
 
     }
-  }, [graphData, dimensions]);
+  }, [graphData, fgRef, dimensions]);
 
   return (
     <div className={styles.graphContainer} ref={graphContainerRef}>

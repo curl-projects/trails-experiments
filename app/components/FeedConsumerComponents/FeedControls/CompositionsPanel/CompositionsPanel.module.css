@@ -1,0 +1,12 @@
+.panel {
+  padding: 8px 0;
+  height: 60vh;
+  overflow-y: auto;
+}
+
+.compositionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0 1rem;
+} 

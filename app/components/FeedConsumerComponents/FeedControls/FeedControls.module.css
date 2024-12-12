@@ -48,7 +48,26 @@
     gap: 8px;
     margin-bottom: 16px;
     border-bottom: 1px solid #dee2e6;
-    padding-bottom: 8px;
+    padding: 0 16px 8px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .panelTabs::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  /* Handle */
+  .panelTabs::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 2px;
+  }
+  
+  /* Track */
+  .panelTabs::-webkit-scrollbar-track {
+    background: #f1f5f9;
   }
   
   .panelTab {
@@ -63,6 +82,8 @@
     font-size: 0.9em;
     font-weight: 500;
     border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
     transition: background-color 0.2s ease, color 0.2s ease;
   }
   

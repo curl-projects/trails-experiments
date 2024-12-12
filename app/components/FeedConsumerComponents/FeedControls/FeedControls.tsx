@@ -5,6 +5,7 @@ import { SearchPanel } from './SearchPanel/SearchPanel';
 import { DistributionsPanel } from './DistributionsPanel/DistributionsPanel';
 import { GraphPanel } from './GraphPanel/GraphPanel';
 import { ProtocolsPanel } from './ProtocolsPanel/ProtocolsPanel';
+import { CompositionsPanel } from './CompositionsPanel/CompositionsPanel';
 import { Event } from '~/types/FeedTypes';
 
 interface FeedControlsProps {
@@ -13,7 +14,7 @@ interface FeedControlsProps {
   events: Event[];
 }
 
-type PanelType = 'search' | 'distributions' | 'graph' | 'protocols';
+type PanelType = 'search' | 'protocols' | 'compositions' | 'distributions' | 'graph';
 
 export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch, onResetFeed, events }) => {
   const [isMinimized, setIsMinimized] = useState(false);
@@ -57,6 +58,12 @@ export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch, onR
               <FaCode /> Protocols
             </button>
             <button
+              className={`${styles.panelTab} ${activePanel === 'compositions' ? styles.active : ''}`}
+              onClick={() => setActivePanel('compositions')}
+            >
+              <FaProjectDiagram /> Compositions
+            </button>
+            <button
               className={`${styles.panelTab} ${activePanel === 'distributions' ? styles.active : ''}`}
               onClick={() => setActivePanel('distributions')}
             >
@@ -72,6 +79,7 @@ export const FeedControls: React.FC<FeedControlsProps> = ({ onTriggerSearch, onR
           
           {activePanel === 'search' && <SearchPanel onTriggerSearch={onTriggerSearch} />}
           {activePanel === 'protocols' && <ProtocolsPanel />}
+          {activePanel === 'compositions' && <CompositionsPanel events={events} />}
           {activePanel === 'distributions' && <DistributionsPanel />}
           {activePanel === 'graph' && <GraphPanel events={events} />}
         </>
